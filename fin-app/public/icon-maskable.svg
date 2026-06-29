@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Icone maskable do aplicativo Lumina Planner</title>
+  <desc id="desc">Icone financeiro em area segura para instalacao mobile.</desc>
+  <defs>
+    <radialGradient id="glow" cx="65%" cy="28%" r="74%">
+      <stop stop-color="#c084fc"/>
+      <stop offset="0.45" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#111827"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <circle cx="256" cy="256" r="166" fill="#fff" fill-opacity="0.08"/>
+  <path d="M154 302 218 238c10-10 26-10 36 0l34 34 72-82" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+  <path d="M362 190h-52m52 0v52" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+  <circle cx="286" cy="316" r="70" fill="#fff" fill-opacity="0.16" stroke="#fff" stroke-width="24"/>
+  <path d="M307 284c-10-11-39-13-44 6-5 21 45 17 42 45-3 22-36 24-52 9m28-71v-18m0 113v-18" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+</svg>

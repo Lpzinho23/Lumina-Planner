@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Icone do aplicativo Lumina Planner</title>
+  <desc id="desc">Icone roxo com moeda e seta de crescimento financeira.</desc>
+  <defs>
+    <linearGradient id="bg" x1="84" y1="448" x2="428" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1e1b4b"/>
+      <stop offset="0.52" stop-color="#6d28d9"/>
+      <stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+    <filter id="shadow" x="82" y="82" width="348" height="348" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#1e1b4b" flood-opacity="0.32"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M132 326 210 248c12-12 31-12 43 0l41 41 92-104" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
+  <path d="M388 185h-64m64 0v64" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
+  <g filter="url(#shadow)">
+    <circle cx="293" cy="317" r="86" fill="#fff" fill-opacity="0.15" stroke="#fff" stroke-width="28"/>
+    <path d="M318 278c-12-14-50-17-56 7-7 27 57 21 53 57-3 29-47 31-68 11m36-91v-24m0 145v-24" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/>
+  </g>
+</svg>

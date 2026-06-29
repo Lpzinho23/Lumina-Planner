@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Avatar de cada usuário: leitura/escrita apenas pelo dono.
+    match /avatars/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null
+                   && request.auth.uid == userId
+                   && request.resource != null
+                   && request.resource.size < 2 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // Bloqueia explicitamente qualquer outro caminho no bucket.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
