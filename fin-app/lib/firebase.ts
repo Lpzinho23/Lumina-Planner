@@ -93,18 +93,21 @@ if (process.env.NODE_ENV === "development" && missing.length > 0) {
 }
 
 if (process.env.NODE_ENV === "production" && missing.length > 0) {
-  throw new Error(
-    `[firebase] Variáveis NEXT_PUBLIC_FIREBASE_* ausentes: ${missing.join(", ")}`,
+  console.error(
+    `[firebase] Variáveis NEXT_PUBLIC_FIREBASE_* ausentes: ${missing.join(", ")}. Configure-as na Vercel para autenticação e dados reais.`,
   );
 }
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: readEnv("NEXT_PUBLIC_FIREBASE_API_KEY"),
-  authDomain: readEnv("NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"),
-  projectId: readEnv("NEXT_PUBLIC_FIREBASE_PROJECT_ID"),
-  storageBucket: readEnv("NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"),
-  messagingSenderId: readEnv("NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"),
-  appId: readEnv("NEXT_PUBLIC_FIREBASE_APP_ID"),
+  apiKey: readEnv("NEXT_PUBLIC_FIREBASE_API_KEY") || "missing-api-key",
+  authDomain:
+    readEnv("NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN") || "missing.firebaseapp.com",
+  projectId: readEnv("NEXT_PUBLIC_FIREBASE_PROJECT_ID") || "missing-project",
+  storageBucket:
+    readEnv("NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET") || "missing.appspot.com",
+  messagingSenderId:
+    readEnv("NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID") || "000000000000",
+  appId: readEnv("NEXT_PUBLIC_FIREBASE_APP_ID") || "1:000000000000:web:missing",
 };
 
 const app = getOrCreateFirebaseApp(firebaseConfig);
