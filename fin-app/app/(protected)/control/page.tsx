@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   collection,
   deleteDoc,
@@ -380,7 +381,11 @@ export default function ControlPage() {
     }
   };
 
-  const handleOpen = (type: TransactionType, item?: TransactionRecord) => {
+  const handleOpen = (
+    type: TransactionType,
+    item?: TransactionRecord,
+    preset?: { paymentMethod?: string; status?: string },
+  ) => {
     setActiveType(type);
     if (item) {
       setEditingId(item.id);
@@ -402,8 +407,8 @@ export default function ControlPage() {
       setAmount("");
       setCategory("");
       setBank("");
-      setPaymentMethod("");
-      setStatus("Pendente");
+      setPaymentMethod(preset?.paymentMethod ?? "");
+      setStatus(preset?.status ?? "Pendente");
       setDate(new Date().toISOString().split("T")[0]);
       setIsInstallment(false);
       setYieldRate("100");
@@ -415,6 +420,31 @@ export default function ControlPage() {
     }
     setOpen(true);
   };
+
+  const searchParams = useSearchParams();
+  const openHandledRef = useRef(false);
+
+  useEffect(() => {
+    const openParam = searchParams.get("open");
+    if (!openParam || openHandledRef.current) return;
+    openHandledRef.current = true;
+
+    if (openParam === "income") {
+      handleOpen("income");
+    } else if (openParam === "expense") {
+      handleOpen("expense_variable");
+    } else if (openParam === "credit") {
+      handleOpen("expense_variable", undefined, {
+        paymentMethod: "Crédito",
+        status: "Pago",
+      });
+    } else if (openParam === "transfer") {
+      toast("Use duas movimentações para registrar uma transferência entre contas.", {
+        icon: "↔️",
+      });
+      handleOpen("savings");
+    }
+  }, [searchParams]);
 
   const handleCardSelection = (id: string) => {
     setSelectedCardId(id);

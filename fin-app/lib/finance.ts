@@ -14,6 +14,43 @@ export const isInvestmentType = (
   t: TransactionType,
 ): t is "savings" | "piggy" => t === "savings" || t === "piggy";
 
+export function computeAccountBalance(
+  account: AccountRecord,
+  transactions: TransactionRecord[],
+): number {
+  const initial = account.initialBalance ?? 0;
+  const totalIn = transactions
+    .filter((t) => t.type === "income" && t.bank === account.name)
+    .reduce((a, b) => a + b.amount, 0);
+  const totalOut = transactions
+    .filter(
+      (t) =>
+        isExpenseType(t.type) &&
+        t.paymentMethod !== "Crédito" &&
+        t.bank === account.name,
+    )
+    .reduce((a, b) => a + b.amount, 0);
+  const totalInvestedFromHere = transactions
+    .filter((t) => isInvestmentType(t.type) && t.bank === account.name)
+    .reduce((a, b) => a + b.amount, 0);
+  return initial + totalIn - totalOut - totalInvestedFromHere;
+}
+
+export function computeCardDebt(
+  card: CardRecord,
+  transactions: TransactionRecord[],
+): number {
+  return transactions
+    .filter(
+      (t) =>
+        t.bank === card.name &&
+        t.paymentMethod === "Crédito" &&
+        isExpenseType(t.type) &&
+        t.status !== "Fatura Paga",
+    )
+    .reduce((acc, curr) => acc + curr.amount, 0);
+}
+
 const TRANSACTION_TYPES: readonly TransactionType[] = [
   "income",
   "expense_fixed",
