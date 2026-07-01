@@ -8,6 +8,7 @@ import { SEMANTIC_COLORS } from "@/lib/constants";
 import { formatBRL } from "@/lib/format";
 import { isExpenseType, isInvestmentType } from "@/lib/finance";
 import PageHeader from "@/components/PageHeader";
+import { largeStatValueSx, paperCardSx, statValueSx } from "@/components/layout/shared";
 import {
   Box,
   CircularProgress,
@@ -41,7 +42,7 @@ export default function ReportsTotalPage() {
   }, [transactions]);
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Total geral"
         subtitle="Consolidado de todas as movimentações registradas."
@@ -53,14 +54,7 @@ export default function ReportsTotalPage() {
           <CircularProgress aria-label="Carregando totais" />
         </Box>
       ) : (
-        <Paper
-          sx={{
-            p: 3,
-            bgcolor: colors.paper,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 3,
-          }}
-        >
+        <Paper sx={paperCardSx(colors)}>
           <Stack spacing={2.5}>
             <Box>
               <Typography variant="body2" color={colors.textSecondary}>
@@ -75,7 +69,7 @@ export default function ReportsTotalPage() {
               <Typography variant="body2" color={colors.textSecondary}>
                 Receitas acumuladas
               </Typography>
-              <Typography variant="h4" fontWeight={800} color={SEMANTIC_COLORS.income}>
+              <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.income }}>
                 {formatBRL(totals.income)}
               </Typography>
             </Box>
@@ -83,7 +77,7 @@ export default function ReportsTotalPage() {
               <Typography variant="body2" color={colors.textSecondary}>
                 Despesas acumuladas
               </Typography>
-              <Typography variant="h4" fontWeight={800} color={SEMANTIC_COLORS.variable}>
+              <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.variable }}>
                 {formatBRL(totals.expense)}
               </Typography>
             </Box>
@@ -91,7 +85,7 @@ export default function ReportsTotalPage() {
               <Typography variant="body2" color={colors.textSecondary}>
                 Investimentos acumulados
               </Typography>
-              <Typography variant="h4" fontWeight={800} color={SEMANTIC_COLORS.savings}>
+              <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.savings }}>
                 {formatBRL(totals.investments)}
               </Typography>
             </Box>
@@ -101,9 +95,10 @@ export default function ReportsTotalPage() {
                 Resultado líquido (receitas − despesas)
               </Typography>
               <Typography
-                variant="h3"
-                fontWeight={800}
-                color={totals.netWorth >= 0 ? colors.text : colors.danger}
+                sx={{
+                  ...largeStatValueSx,
+                  color: totals.netWorth >= 0 ? colors.text : colors.danger,
+                }}
               >
                 {formatBRL(totals.netWorth)}
               </Typography>

@@ -9,6 +9,12 @@ import { formatBRL, parseISODateUTC } from "@/lib/format";
 import { isExpenseType } from "@/lib/finance";
 import PageHeader from "@/components/PageHeader";
 import {
+  filterFormControlSx,
+  largeStatValueSx,
+  paperCardSx,
+  statValueSx,
+} from "@/components/layout/shared";
+import {
   Box,
   CircularProgress,
   FormControl,
@@ -49,15 +55,15 @@ export default function ReportsMonthlyPage() {
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Balanço mensal"
         subtitle="Receitas, despesas e saldo do mês."
         colors={colors}
       />
 
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={3}>
-        <FormControl size="small" sx={{ minWidth: 160 }}>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} mb={3}>
+        <FormControl size="small" sx={filterFormControlSx}>
           <InputLabel id="monthly-month-label">Mês</InputLabel>
           <Select
             labelId="monthly-month-label"
@@ -73,7 +79,7 @@ export default function ReportsMonthlyPage() {
             ))}
           </Select>
         </FormControl>
-        <FormControl size="small" sx={{ minWidth: 120 }}>
+        <FormControl size="small" sx={filterFormControlSx}>
           <InputLabel id="monthly-year-label">Ano</InputLabel>
           <Select
             labelId="monthly-year-label"
@@ -96,38 +102,37 @@ export default function ReportsMonthlyPage() {
           <CircularProgress aria-label="Carregando balanço mensal" />
         </Box>
       ) : (
-        <Stack spacing={2}>
-          <Paper sx={{ p: 3, bgcolor: colors.paper, border: `1px solid ${colors.border}`, borderRadius: 3 }}>
+        <Stack spacing={1.5}>
+          <Paper sx={paperCardSx(colors)}>
             <Typography variant="body2" color={colors.textSecondary}>Receitas</Typography>
-            <Typography variant="h4" fontWeight={800} color={SEMANTIC_COLORS.income}>
+            <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.income }}>
               {formatBRL(summary.income)}
             </Typography>
           </Paper>
-          <Paper sx={{ p: 3, bgcolor: colors.paper, border: `1px solid ${colors.border}`, borderRadius: 3 }}>
+          <Paper sx={paperCardSx(colors)}>
             <Typography variant="body2" color={colors.textSecondary}>Despesas</Typography>
-            <Typography variant="h4" fontWeight={800} color={SEMANTIC_COLORS.variable}>
+            <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.variable }}>
               {formatBRL(summary.expense)}
             </Typography>
           </Paper>
-          <Paper sx={{ p: 3, bgcolor: colors.paper, border: `1px solid ${colors.border}`, borderRadius: 3 }}>
+          <Paper sx={paperCardSx(colors)}>
             <Typography variant="body2" color={colors.textSecondary}>Investimentos</Typography>
-            <Typography variant="h4" fontWeight={800} color={SEMANTIC_COLORS.savings}>
+            <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.savings }}>
               {formatBRL(summary.investments)}
             </Typography>
           </Paper>
           <Paper
             sx={{
-              p: 3,
-              bgcolor: colors.paper,
+              ...paperCardSx(colors),
               border: `2px solid ${summary.balance >= 0 ? SEMANTIC_COLORS.income : colors.danger}`,
-              borderRadius: 3,
             }}
           >
             <Typography variant="body2" color={colors.textSecondary}>Saldo do mês</Typography>
             <Typography
-              variant="h3"
-              fontWeight={800}
-              color={summary.balance >= 0 ? colors.text : colors.danger}
+              sx={{
+                ...largeStatValueSx,
+                color: summary.balance >= 0 ? colors.text : colors.danger,
+              }}
             >
               {formatBRL(summary.balance)}
             </Typography>

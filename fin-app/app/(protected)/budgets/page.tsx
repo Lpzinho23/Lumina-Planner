@@ -8,6 +8,7 @@ import { CATEGORIES_DEFAULT, MONTHS_LIST } from "@/lib/constants";
 import { formatBRL, parseISODateUTC } from "@/lib/format";
 import { isExpenseType } from "@/lib/finance";
 import PageHeader from "@/components/PageHeader";
+import { filterFormControlSx, paperCardSx } from "@/components/layout/shared";
 import {
   Box,
   CircularProgress,
@@ -64,15 +65,15 @@ export default function BudgetsPage() {
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Orçamentos"
         subtitle="Acompanhe o gasto por categoria no mês selecionado."
         colors={colors}
       />
 
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={3}>
-        <FormControl size="small" sx={{ minWidth: 160 }}>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} mb={3}>
+        <FormControl size="small" sx={filterFormControlSx}>
           <InputLabel id="budget-month-label">Mês</InputLabel>
           <Select
             labelId="budget-month-label"
@@ -88,7 +89,7 @@ export default function BudgetsPage() {
             ))}
           </Select>
         </FormControl>
-        <FormControl size="small" sx={{ minWidth: 120 }}>
+        <FormControl size="small" sx={filterFormControlSx}>
           <InputLabel id="budget-year-label">Ano</InputLabel>
           <Select
             labelId="budget-year-label"
@@ -111,33 +112,27 @@ export default function BudgetsPage() {
           <CircularProgress aria-label="Carregando orçamentos" />
         </Box>
       ) : (
-        <Stack spacing={2}>
+        <Stack spacing={1.5}>
           {categorySpending.map(({ name, spent }) => {
             const percent = Math.min((spent / DEFAULT_BUDGET) * 100, 100);
             const overBudget = spent > DEFAULT_BUDGET;
             return (
-              <Paper
-                key={name}
-                sx={{
-                  p: 2.5,
-                  bgcolor: colors.paper,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: 2,
-                }}
-              >
+              <Paper key={name} sx={paperCardSx(colors)}>
                 <Stack
-                  direction="row"
+                  direction={{ xs: "column", sm: "row" }}
                   justifyContent="space-between"
-                  alignItems="center"
+                  alignItems={{ xs: "flex-start", sm: "center" }}
+                  spacing={0.5}
                   mb={1}
                 >
-                  <Typography fontWeight={700} color={colors.text}>
+                  <Typography fontWeight={700} color={colors.text} sx={{ wordBreak: "break-word" }}>
                     {name}
                   </Typography>
                   <Typography
                     variant="body2"
                     fontWeight={600}
                     color={overBudget ? colors.danger : colors.textSecondary}
+                    sx={{ whiteSpace: { sm: "nowrap" }, flexShrink: 0 }}
                   >
                     {formatBRL(spent)} / {formatBRL(DEFAULT_BUDGET)}
                   </Typography>

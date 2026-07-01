@@ -9,6 +9,12 @@ import { formatBRL } from "@/lib/format";
 import { isExpenseType } from "@/lib/finance";
 import PageHeader from "@/components/PageHeader";
 import {
+  contentGridSx,
+  largeStatValueSx,
+  paperCardSx,
+  statValueSx,
+} from "@/components/layout/shared";
+import {
   Box,
   Chip,
   CircularProgress,
@@ -16,7 +22,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import GridLegacy from "@mui/material/GridLegacy";
 import { Category as CategoryIcon } from "@mui/icons-material";
 
 export default function CategoriesPage() {
@@ -40,7 +45,7 @@ export default function CategoriesPage() {
   const grandTotal = totals.reduce((sum, [, value]) => sum + value, 0);
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Categorias"
         subtitle="Despesas agrupadas por categoria."
@@ -53,56 +58,38 @@ export default function CategoriesPage() {
         </Box>
       ) : (
         <>
-          <Paper
-            sx={{
-              p: 3,
-              mb: 3,
-              bgcolor: colors.paper,
-              border: `1px solid ${colors.border}`,
-              borderRadius: 3,
-            }}
-          >
+          <Paper sx={{ ...paperCardSx(colors), mb: 3 }}>
             <Typography variant="body2" color={colors.textSecondary}>
               Total em despesas
             </Typography>
-            <Typography variant="h4" fontWeight={800} color={colors.text}>
+            <Typography sx={{ ...largeStatValueSx, color: colors.text }}>
               {formatBRL(grandTotal)}
             </Typography>
           </Paper>
 
-          <GridLegacy container spacing={2}>
+          <Box sx={contentGridSx}>
             {totals.map(([name, total]) => {
               const share = grandTotal > 0 ? (total / grandTotal) * 100 : 0;
               return (
-                <GridLegacy item xs={12} sm={6} md={4} key={name}>
-                  <Paper
-                    sx={{
-                      p: 2.5,
-                      bgcolor: colors.paper,
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: 2,
-                      height: "100%",
-                    }}
-                  >
-                    <Stack direction="row" spacing={1.5} alignItems="center" mb={1.5}>
-                      <CategoryIcon sx={{ color: colors.primary }} fontSize="small" />
-                      <Typography fontWeight={700} color={colors.text}>
-                        {name}
-                      </Typography>
-                    </Stack>
-                    <Typography variant="h6" fontWeight={800} color={colors.text}>
-                      {formatBRL(total)}
+                <Paper key={name} sx={paperCardSx(colors)}>
+                  <Stack direction="row" spacing={1.5} alignItems="center" mb={1.5}>
+                    <CategoryIcon sx={{ color: colors.primary, flexShrink: 0 }} fontSize="small" />
+                    <Typography fontWeight={700} color={colors.text} sx={{ wordBreak: "break-word" }}>
+                      {name}
                     </Typography>
-                    <Chip
-                      size="small"
-                      label={`${share.toFixed(1)}% do total`}
-                      sx={{ mt: 1, bgcolor: `${colors.primary}15`, color: colors.primary }}
-                    />
-                  </Paper>
-                </GridLegacy>
+                  </Stack>
+                  <Typography sx={{ ...statValueSx, color: colors.text }}>
+                    {formatBRL(total)}
+                  </Typography>
+                  <Chip
+                    size="small"
+                    label={`${share.toFixed(1)}% do total`}
+                    sx={{ mt: 1, bgcolor: `${colors.primary}15`, color: colors.primary }}
+                  />
+                </Paper>
               );
             })}
-          </GridLegacy>
+          </Box>
         </>
       )}
     </Box>

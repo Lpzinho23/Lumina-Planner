@@ -5,26 +5,18 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useAppTheme } from "@/context/ThemeContext";
 import { useTransactions } from "@/lib/hooks/useTransactions";
-import { formatBRL, formatDateBR } from "@/lib/format";
-import { SEMANTIC_COLORS } from "@/lib/constants";
-import { isExpenseType } from "@/lib/finance";
 import PageHeader from "@/components/PageHeader";
+import TransactionViews from "@/components/transactions/TransactionViews";
+import { emptyPaperSx, filterFormControlSx, paperCardSx } from "@/components/layout/shared";
 import {
   Box,
   Button,
-  Chip,
   CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
   Paper,
   Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material/Select";
@@ -56,7 +48,7 @@ export default function TransactionsPage() {
   };
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Transações"
         subtitle="Histórico completo de receitas, despesas e investimentos."
@@ -74,16 +66,8 @@ export default function TransactionsPage() {
         }
       />
 
-      <Paper
-        sx={{
-          p: 2,
-          mb: 2,
-          bgcolor: colors.paper,
-          border: `1px solid ${colors.border}`,
-          borderRadius: 2,
-        }}
-      >
-        <FormControl size="small" sx={{ minWidth: 200 }}>
+      <Paper sx={{ ...paperCardSx(colors), mb: 2, p: { xs: 1.5, sm: 2 } }}>
+        <FormControl size="small" sx={filterFormControlSx}>
           <InputLabel id="type-filter-label">Tipo</InputLabel>
           <Select
             labelId="type-filter-label"
@@ -107,72 +91,13 @@ export default function TransactionsPage() {
           <CircularProgress aria-label="Carregando transações" />
         </Box>
       ) : filtered.length === 0 ? (
-        <Paper
-          sx={{
-            p: 4,
-            textAlign: "center",
-            bgcolor: colors.paper,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 3,
-          }}
-        >
+        <Paper sx={emptyPaperSx(colors)}>
           <Typography color={colors.textSecondary}>
             Nenhuma transação encontrada.
           </Typography>
         </Paper>
       ) : (
-        <TableContainer
-          component={Paper}
-          sx={{
-            bgcolor: colors.paper,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 3,
-          }}
-        >
-          <Table aria-label="Lista de transações">
-            <TableHead>
-              <TableRow>
-                <TableCell>Data</TableCell>
-                <TableCell>Descrição</TableCell>
-                <TableCell>Categoria</TableCell>
-                <TableCell>Tipo</TableCell>
-                <TableCell align="right">Valor</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filtered.map((tx) => {
-                const isExpense = isExpenseType(tx.type);
-                return (
-                  <TableRow key={tx.id} hover>
-                    <TableCell>{formatDateBR(tx.date)}</TableCell>
-                    <TableCell>{tx.description || "—"}</TableCell>
-                    <TableCell>{tx.category || "—"}</TableCell>
-                    <TableCell>
-                      <Chip
-                        size="small"
-                        label={TYPE_LABELS[tx.type]}
-                        sx={{
-                          bgcolor: isExpense ? `${colors.danger}20` : `${SEMANTIC_COLORS.income}20`,
-                          color: isExpense ? colors.danger : SEMANTIC_COLORS.income,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      sx={{
-                        fontWeight: 700,
-                        color: isExpense ? colors.danger : SEMANTIC_COLORS.income,
-                      }}
-                    >
-                      {isExpense ? "-" : "+"}
-                      {formatBRL(tx.amount)}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <TransactionViews items={filtered} typeLabels={TYPE_LABELS} colors={colors} />
       )}
     </Box>
   );

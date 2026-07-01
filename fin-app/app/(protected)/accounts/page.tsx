@@ -9,8 +9,13 @@ import { useTransactions } from "@/lib/hooks/useTransactions";
 import { computeAccountBalance } from "@/lib/finance";
 import { formatBRL } from "@/lib/format";
 import PageHeader from "@/components/PageHeader";
+import {
+  contentGridSx,
+  emptyPaperSx,
+  paperCardSx,
+  statValueSx,
+} from "@/components/layout/shared";
 import { Box, Button, CircularProgress, Paper, Stack, Typography } from "@mui/material";
-import GridLegacy from "@mui/material/GridLegacy";
 import { AccountBalanceWallet, Add } from "@mui/icons-material";
 
 export default function AccountsPage() {
@@ -23,7 +28,7 @@ export default function AccountsPage() {
   const loading = accountsLoading || txLoading;
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Contas"
         subtitle="Saldo disponível em cada conta bancária."
@@ -46,15 +51,7 @@ export default function AccountsPage() {
           <CircularProgress aria-label="Carregando contas" />
         </Box>
       ) : accounts.length === 0 ? (
-        <Paper
-          sx={{
-            p: 4,
-            textAlign: "center",
-            bgcolor: colors.paper,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 3,
-          }}
-        >
+        <Paper sx={emptyPaperSx(colors)}>
           <Typography color={colors.textSecondary} mb={2}>
             Nenhuma conta cadastrada ainda.
           </Typography>
@@ -68,50 +65,47 @@ export default function AccountsPage() {
           </Button>
         </Paper>
       ) : (
-        <GridLegacy container spacing={2}>
+        <Box sx={contentGridSx}>
           {accounts.map((account) => {
             const balance = computeAccountBalance(account, transactions);
             return (
-              <GridLegacy item xs={12} sm={6} md={4} key={account.id}>
-                <Paper
+              <Paper key={account.id} sx={paperCardSx(colors)}>
+                <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
+                  <Box
+                    sx={{
+                      p: 1,
+                      borderRadius: 2,
+                      flexShrink: 0,
+                      bgcolor: `${account.color ?? colors.primary}20`,
+                      color: account.color ?? colors.primary,
+                    }}
+                  >
+                    <AccountBalanceWallet fontSize="small" />
+                  </Box>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight={700}
+                    color={colors.text}
+                    sx={{ wordBreak: "break-word" }}
+                  >
+                    {account.name}
+                  </Typography>
+                </Stack>
+                <Typography variant="caption" color={colors.textSecondary}>
+                  Saldo disponível
+                </Typography>
+                <Typography
                   sx={{
-                    p: 3,
-                    borderRadius: 3,
-                    bgcolor: colors.paper,
-                    border: `1px solid ${colors.border}`,
-                    height: "100%",
+                    ...statValueSx,
+                    color: balance >= 0 ? colors.text : colors.danger,
                   }}
                 >
-                  <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
-                    <Box
-                      sx={{
-                        p: 1,
-                        borderRadius: 2,
-                        bgcolor: `${account.color ?? colors.primary}20`,
-                        color: account.color ?? colors.primary,
-                      }}
-                    >
-                      <AccountBalanceWallet fontSize="small" />
-                    </Box>
-                    <Typography variant="subtitle1" fontWeight={700} color={colors.text}>
-                      {account.name}
-                    </Typography>
-                  </Stack>
-                  <Typography variant="caption" color={colors.textSecondary}>
-                    Saldo disponível
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    fontWeight={800}
-                    color={balance >= 0 ? colors.text : colors.danger}
-                  >
-                    {formatBRL(balance)}
-                  </Typography>
-                </Paper>
-              </GridLegacy>
+                  {formatBRL(balance)}
+                </Typography>
+              </Paper>
             );
           })}
-        </GridLegacy>
+        </Box>
       )}
     </Box>
   );

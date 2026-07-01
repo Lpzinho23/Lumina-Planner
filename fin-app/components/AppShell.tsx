@@ -35,13 +35,33 @@ export default function AppShell({ children }: AppShellProps) {
           width: "100%",
           minWidth: 0,
           color: colors.text,
-          p: isAuthPage ? 0 : { xs: 2, md: 4 },
-          pt: isAuthPage ? 0 : { xs: 10, md: 4 },
-          pb: isAuthPage ? 0 : { xs: 12, md: 4 },
+          p: isAuthPage ? 0 : { xs: 1.5, sm: 2, md: 3, lg: 4 },
+          pt: isAuthPage
+            ? 0
+            : {
+                xs: "calc(56px + env(safe-area-inset-top) + 12px)",
+                md: 3,
+                lg: 4,
+              },
+          pb: isAuthPage
+            ? 0
+            : {
+                xs: "calc(72px + env(safe-area-inset-bottom))",
+                md: 3,
+                lg: 4,
+              },
           ml: isAuthPage ? 0 : { md: `${SIDEBAR_WIDTH}px` },
           transition: "margin 0.2s ease",
         }}
       >
+        <Box
+          sx={{
+            maxWidth: 1280,
+            mx: "auto",
+            width: "100%",
+            minWidth: 0,
+          }}
+        >
         <Toaster
           position="top-center"
           toastOptions={{
@@ -51,6 +71,7 @@ export default function AppShell({ children }: AppShellProps) {
           }}
         />
         {children}
+        </Box>
       </Box>
     </Box>
   );

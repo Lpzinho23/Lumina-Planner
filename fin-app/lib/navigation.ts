@@ -11,7 +11,7 @@ import {
   BarChart,
   Person,
   Category,
-  Settings,
+  ReceiptLong,
 } from "@mui/icons-material";
 
 export type NavItem = {
@@ -29,6 +29,7 @@ export const NAV_SECTIONS: NavSection[] = [
   {
     items: [
       { label: "Visão geral", path: "/dashboard", icon: Dashboard },
+      { label: "Controle financeiro", path: "/control", icon: ReceiptLong },
       { label: "Contas", path: "/accounts", icon: AccountBalance },
       { label: "Cartões de crédito", path: "/cards", icon: CreditCard },
       { label: "Transações", path: "/transactions", icon: ShowChart },

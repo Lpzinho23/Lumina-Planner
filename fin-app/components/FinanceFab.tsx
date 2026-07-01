@@ -33,8 +33,8 @@ export default function FinanceFab() {
     <Box
       sx={{
         position: "fixed",
-        right: { xs: 16, md: 24 },
-        bottom: { xs: 24, md: 24 },
+        right: { xs: 12, sm: 16, md: 24 },
+        bottom: { xs: "calc(16px + env(safe-area-inset-bottom))", md: 24 },
         zIndex: 1300,
       }}
     >

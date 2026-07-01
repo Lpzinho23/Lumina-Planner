@@ -9,6 +9,12 @@ import { formatBRL, formatDateBR } from "@/lib/format";
 import { isExpenseType } from "@/lib/finance";
 import PageHeader from "@/components/PageHeader";
 import {
+  emptyPaperSx,
+  paperCardSx,
+  statCardsRowSx,
+  statValueSx,
+} from "@/components/layout/shared";
+import {
   Box,
   Chip,
   CircularProgress,
@@ -43,7 +49,7 @@ export default function ReportsDailyPage() {
   }, [dayTransactions]);
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Resumo diário"
         subtitle={`Movimentações de ${formatDateBR(today)}`}
@@ -56,33 +62,34 @@ export default function ReportsDailyPage() {
         </Box>
       ) : (
         <>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={3}>
-            <Paper sx={{ p: 2.5, flex: 1, bgcolor: colors.paper, border: `1px solid ${colors.border}`, borderRadius: 2 }}>
+          <Box sx={statCardsRowSx}>
+            <Paper sx={paperCardSx(colors)}>
               <Typography variant="body2" color={colors.textSecondary}>Receitas</Typography>
-              <Typography variant="h5" fontWeight={800} color={SEMANTIC_COLORS.income}>
+              <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.income }}>
                 {formatBRL(summary.income)}
               </Typography>
             </Paper>
-            <Paper sx={{ p: 2.5, flex: 1, bgcolor: colors.paper, border: `1px solid ${colors.border}`, borderRadius: 2 }}>
+            <Paper sx={paperCardSx(colors)}>
               <Typography variant="body2" color={colors.textSecondary}>Despesas</Typography>
-              <Typography variant="h5" fontWeight={800} color={SEMANTIC_COLORS.variable}>
+              <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.variable }}>
                 {formatBRL(summary.expense)}
               </Typography>
             </Paper>
-            <Paper sx={{ p: 2.5, flex: 1, bgcolor: colors.paper, border: `1px solid ${colors.border}`, borderRadius: 2 }}>
+            <Paper sx={paperCardSx(colors)}>
               <Typography variant="body2" color={colors.textSecondary}>Saldo do dia</Typography>
               <Typography
-                variant="h5"
-                fontWeight={800}
-                color={summary.balance >= 0 ? colors.text : colors.danger}
+                sx={{
+                  ...statValueSx,
+                  color: summary.balance >= 0 ? colors.text : colors.danger,
+                }}
               >
                 {formatBRL(summary.balance)}
               </Typography>
             </Paper>
-          </Stack>
+          </Box>
 
           {dayTransactions.length === 0 ? (
-            <Paper sx={{ p: 4, textAlign: "center", bgcolor: colors.paper, border: `1px solid ${colors.border}`, borderRadius: 3 }}>
+            <Paper sx={emptyPaperSx(colors)}>
               <Typography color={colors.textSecondary}>Nenhuma movimentação hoje.</Typography>
             </Paper>
           ) : (
@@ -90,25 +97,27 @@ export default function ReportsDailyPage() {
               {dayTransactions.map((tx) => {
                 const isExpense = isExpenseType(tx.type);
                 return (
-                  <Paper
-                    key={tx.id}
-                    sx={{
-                      p: 2,
-                      bgcolor: colors.paper,
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <Box>
-                        <Typography fontWeight={700} color={colors.text}>
+                  <Paper key={tx.id} sx={paperCardSx(colors)}>
+                    <Stack
+                      direction={{ xs: "column", sm: "row" }}
+                      justifyContent="space-between"
+                      alignItems={{ xs: "flex-start", sm: "center" }}
+                      spacing={1}
+                    >
+                      <Box sx={{ minWidth: 0, flex: 1 }}>
+                        <Typography fontWeight={700} color={colors.text} sx={{ wordBreak: "break-word" }}>
                           {tx.description || "Sem descrição"}
                         </Typography>
                         <Typography variant="caption" color={colors.textSecondary}>
                           {tx.category || "Sem categoria"}
                         </Typography>
                       </Box>
-                      <Stack direction="row" spacing={1} alignItems="center">
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{ flexShrink: 0, alignSelf: { xs: "flex-start", sm: "center" } }}
+                      >
                         <Chip
                           size="small"
                           label={isExpense ? "Despesa" : "Receita"}
@@ -119,7 +128,10 @@ export default function ReportsDailyPage() {
                         />
                         <Typography
                           fontWeight={800}
-                          color={isExpense ? colors.danger : SEMANTIC_COLORS.income}
+                          sx={{
+                            whiteSpace: "nowrap",
+                            color: isExpense ? colors.danger : SEMANTIC_COLORS.income,
+                          }}
                         >
                           {isExpense ? "-" : "+"}
                           {formatBRL(tx.amount)}

@@ -10,8 +10,13 @@ import { isExpenseType } from "@/lib/finance";
 import PageHeader from "@/components/PageHeader";
 import TopDespesas from "@/components/dashboard/TopDespesas";
 import FontesRenda from "@/components/dashboard/FontesRenda";
+import {
+  chartsGridSx,
+  paperCardSx,
+  statCardsRowSx,
+  statValueSx,
+} from "@/components/layout/shared";
 import { Box, CircularProgress, Paper, Typography } from "@mui/material";
-import GridLegacy from "@mui/material/GridLegacy";
 
 export default function ReportsChartsPage() {
   const { user } = useAuth();
@@ -47,7 +52,7 @@ export default function ReportsChartsPage() {
     .reduce((s, t) => s + t.amount, 0);
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <PageHeader
         title="Gráficos"
         subtitle="Visualize receitas e despesas em gráficos."
@@ -60,60 +65,42 @@ export default function ReportsChartsPage() {
         </Box>
       ) : (
         <>
-          <GridLegacy container spacing={2} mb={3}>
-            <GridLegacy item xs={12} sm={6}>
-              <Paper
-                sx={{
-                  p: 3,
-                  bgcolor: colors.paper,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: 3,
-                }}
-              >
-                <Typography variant="body2" color={colors.textSecondary}>
-                  Receitas totais
-                </Typography>
-                <Typography variant="h5" fontWeight={800} color={SEMANTIC_COLORS.income}>
-                  {formatBRL(totalIncome)}
-                </Typography>
-              </Paper>
-            </GridLegacy>
-            <GridLegacy item xs={12} sm={6}>
-              <Paper
-                sx={{
-                  p: 3,
-                  bgcolor: colors.paper,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: 3,
-                }}
-              >
-                <Typography variant="body2" color={colors.textSecondary}>
-                  Despesas totais
-                </Typography>
-                <Typography variant="h5" fontWeight={800} color={SEMANTIC_COLORS.variable}>
-                  {formatBRL(totalExpense)}
-                </Typography>
-              </Paper>
-            </GridLegacy>
-          </GridLegacy>
+          <Box sx={statCardsRowSx}>
+            <Paper sx={paperCardSx(colors)}>
+              <Typography variant="body2" color={colors.textSecondary}>
+                Receitas totais
+              </Typography>
+              <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.income }}>
+                {formatBRL(totalIncome)}
+              </Typography>
+            </Paper>
+            <Paper sx={paperCardSx(colors)}>
+              <Typography variant="body2" color={colors.textSecondary}>
+                Despesas totais
+              </Typography>
+              <Typography sx={{ ...statValueSx, color: SEMANTIC_COLORS.variable }}>
+                {formatBRL(totalExpense)}
+              </Typography>
+            </Paper>
+          </Box>
 
-          <GridLegacy container spacing={2}>
-            <GridLegacy item xs={12} md={6} sx={{ minHeight: 360 }}>
+          <Box sx={chartsGridSx}>
+            <Box sx={{ minHeight: { xs: 300, sm: 340, md: 380 }, minWidth: 0 }}>
               <TopDespesas
                 topExpensesData={topExpensesData}
                 colors={colors}
                 isDarkMode={isDarkMode}
               />
-            </GridLegacy>
-            <GridLegacy item xs={12} md={6} sx={{ minHeight: 360 }}>
+            </Box>
+            <Box sx={{ minHeight: { xs: 300, sm: 340, md: 380 }, minWidth: 0 }}>
               <FontesRenda
                 incomeSourceData={incomeBySource}
                 totalIncomeValue={totalIncome}
                 colors={colors}
                 isDarkMode={isDarkMode}
               />
-            </GridLegacy>
-          </GridLegacy>
+            </Box>
+          </Box>
         </>
       )}
     </Box>

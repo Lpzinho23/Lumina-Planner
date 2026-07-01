@@ -14,7 +14,6 @@ import {
   ButtonBase,
   IconButton,
   Drawer,
-  Button,
 } from "@mui/material";
 import {
   Logout,
@@ -125,20 +124,6 @@ export default function Sidebar() {
         <Divider sx={{ borderColor: colors.border, mx: 2 }} />
         <Box sx={{ px: 2, py: 2.5 }}>
           <Stack spacing={1}>
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{
-                bgcolor: "#2563eb",
-                textTransform: "none",
-                fontWeight: 700,
-                borderRadius: 2,
-                "&:hover": { bgcolor: "#1d4ed8" },
-              }}
-              aria-label="Conhecer plano premium"
-            >
-              Migrar para o Premium
-            </Button>
             <ButtonBase
               onClick={toggleTheme}
               aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
