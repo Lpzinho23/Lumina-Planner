@@ -1,25 +1,28 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Paper, Typography } from "@mui/material";
+import type { TooltipContentProps } from "recharts";
 import type { ThemeColors } from "@/context/ThemeContext";
 import { formatBRL } from "@/lib/format";
 
-export type TooltipDatum = {
-  name?: string;
-  value?: number;
-  color?: string;
-  fill?: string;
-};
-
-export type CustomTooltipProps = {
-  active?: boolean;
-  payload?: readonly TooltipDatum[];
-  label?: string | number;
+type CustomTooltipProps = Pick<
+  TooltipContentProps,
+  "active" | "payload" | "label"
+> & {
   isDarkMode: boolean;
   colors: ThemeColors;
 };
 
-export default function CustomTooltip({
+function normalizeTooltipValue(
+  value: number | string | ReadonlyArray<number | string> | undefined,
+): number {
+  if (value == null) return 0;
+  if (Array.isArray(value)) return Number(value[0] ?? 0);
+  return Number(value);
+}
+
+function CustomTooltip({
   active,
   payload,
   label,
@@ -51,11 +54,27 @@ export default function CustomTooltip({
             fontWeight="bold"
             sx={{ color: entry.color || entry.fill }}
           >
-            {entry.name}: {formatBRL(Number(entry.value ?? 0))}
+            {entry.name != null ? String(entry.name) : "Valor"}:{" "}
+            {formatBRL(normalizeTooltipValue(entry.value))}
           </Typography>
         ))}
       </Paper>
     );
   }
   return null;
+}
+
+export function createCustomTooltipContent(
+  isDarkMode: boolean,
+  colors: ThemeColors,
+): (props: TooltipContentProps) => ReactNode {
+  return (props) => (
+    <CustomTooltip
+      active={props.active}
+      payload={props.payload}
+      label={props.label}
+      isDarkMode={isDarkMode}
+      colors={colors}
+    />
+  );
 }

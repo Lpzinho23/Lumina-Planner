@@ -20,7 +20,7 @@ import type { ThemeColors } from "@/context/ThemeContext";
 import type { ChartLabelRow, RadarExpenseRow } from "@/types/finance";
 import { CHART_PALETTE, SEMANTIC_COLORS } from "@/lib/constants";
 import { formatBRL } from "@/lib/format";
-import CustomTooltip from "./CustomTooltip";
+import { createCustomTooltipContent } from "./CustomTooltip";
 
 type Props = {
   expensesByCategory: RadarExpenseRow[];
@@ -141,11 +141,7 @@ export default function EvolucaoDespesasAnalise({
                 fill={SEMANTIC_COLORS.variable}
                 fillOpacity={0.5}
               />
-              <RechartsTooltip
-                content={(props) => (
-                  <CustomTooltip {...props} isDarkMode={isDarkMode} colors={colors} />
-                )}
-              />
+              <RechartsTooltip content={createCustomTooltipContent(isDarkMode, colors)} />
             </RadarChart>
           </ResponsiveContainer>
         </Paper>

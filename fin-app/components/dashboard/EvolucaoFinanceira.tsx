@@ -15,7 +15,7 @@ import {
 } from "recharts";
 import type { ThemeColors } from "@/context/ThemeContext";
 import { SEMANTIC_COLORS } from "@/lib/constants";
-import CustomTooltip from "./CustomTooltip";
+import { createCustomTooltipContent } from "./CustomTooltip";
 
 export type YearlyTrendRow = {
   name: string;
@@ -76,11 +76,7 @@ export default function EvolucaoFinanceira({
             />
             <XAxis dataKey="name" stroke={colors.textSecondary} />
             <YAxis stroke={colors.textSecondary} />
-            <RechartsTooltip
-              content={(props) => (
-                <CustomTooltip {...props} isDarkMode={isDarkMode} colors={colors} />
-              )}
-            />
+            <RechartsTooltip content={createCustomTooltipContent(isDarkMode, colors)} />
             <Legend />
             <Bar
               dataKey="Entradas"

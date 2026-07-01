@@ -14,7 +14,7 @@ import type { ThemeColors } from "@/context/ThemeContext";
 import type { ChartLabelRow } from "@/types/finance";
 import { SEMANTIC_COLORS } from "@/lib/constants";
 import { formatBRL } from "@/lib/format";
-import CustomTooltip from "./CustomTooltip";
+import { createCustomTooltipContent } from "./CustomTooltip";
 
 type Props = {
   incomeSourceData: ChartLabelRow[];
@@ -129,11 +129,7 @@ export default function FontesRenda({
                 position="center"
               />
             </Pie>
-            <RechartsTooltip
-              content={(props) => (
-                <CustomTooltip {...props} isDarkMode={isDarkMode} colors={colors} />
-              )}
-            />
+            <RechartsTooltip content={createCustomTooltipContent(isDarkMode, colors)} />
             <Legend
               verticalAlign="bottom"
               height={36}
