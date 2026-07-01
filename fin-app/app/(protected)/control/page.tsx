@@ -144,6 +144,7 @@ export default function ControlPage() {
   const [installmentsCount, setInstallmentsCount] = useState(2);
   const [yieldRate, setYieldRate] = useState("100");
   const [selectedCardId, setSelectedCardId] = useState("");
+  const [isCardPaymentFlow, setIsCardPaymentFlow] = useState(false);
   const [isSavingAccount, setIsSavingAccount] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [isSavingCard, setIsSavingCard] = useState(false);
@@ -384,8 +385,9 @@ export default function ControlPage() {
   const handleOpen = (
     type: TransactionType,
     item?: TransactionRecord,
-    preset?: { paymentMethod?: string; status?: string },
+    preset?: { paymentMethod?: string; status?: string; cardFlow?: boolean },
   ) => {
+    setIsCardPaymentFlow(Boolean(preset?.cardFlow));
     setActiveType(type);
     if (item) {
       setEditingId(item.id);
@@ -434,11 +436,8 @@ export default function ControlPage() {
         handleOpen("income");
       } else if (openParam === "expense") {
         handleOpen("expense_variable");
-      } else if (openParam === "credit") {
-        handleOpen("expense_variable", undefined, {
-          paymentMethod: "Crédito",
-          status: "Pago",
-        });
+      } else if (openParam === "card" || openParam === "credit") {
+        handleOpen("expense_variable", undefined, { cardFlow: true });
       } else if (openParam === "transfer") {
         toast("Use duas movimentações para registrar uma transferência entre contas.", {
           icon: "↔️",
@@ -449,6 +448,11 @@ export default function ControlPage() {
 
     return () => window.clearTimeout(timer);
   }, [searchParams]);
+
+  const closeTransactionModal = () => {
+    setOpen(false);
+    setIsCardPaymentFlow(false);
+  };
 
   const handleCardSelection = (id: string) => {
     setSelectedCardId(id);
@@ -530,7 +534,7 @@ export default function ControlPage() {
                 yieldRate: parseFloat(yieldRate),
               },
             );
-            setOpen(false);
+            closeTransactionModal();
             toast.success("Lançamento salvo.");
             return;
           }
@@ -563,7 +567,7 @@ export default function ControlPage() {
           await addDoc(collection(db, `users/${user.uid}/transactions`), data);
         }
       }
-      setOpen(false);
+      closeTransactionModal();
       toast.success("Lançamento salvo.");
     } catch (error: unknown) {
       console.error("Erro ao salvar lançamento:", getReadableErrorMessage(error), error);
@@ -1259,7 +1263,7 @@ export default function ControlPage() {
 
       <Dialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={closeTransactionModal}
         PaperProps={{
           sx: {
             bgcolor: colors.paper,
@@ -1270,7 +1274,11 @@ export default function ControlPage() {
         }}
       >
         <DialogTitle sx={{ borderBottom: `1px solid ${colors.border}` }}>
-          {editingId ? "Editar Lançamento" : "Novo Lançamento"}
+          {editingId
+            ? "Editar Lançamento"
+            : isCardPaymentFlow
+              ? "Nova despesa no cartão"
+              : "Novo Lançamento"}
         </DialogTitle>
         <DialogContent sx={{ mt: 2 }}>
           <Stack spacing={2}>
@@ -1453,17 +1461,29 @@ export default function ControlPage() {
             {activeType !== "savings" && activeType !== "piggy" && (
               <FormControl fullWidth>
                 <InputLabel sx={{ color: colors.textSecondary }}>
-                  {activeType === "income" ? "Recebimento" : "Pagamento"}
+                  {activeType === "income"
+                    ? "Recebimento"
+                    : isCardPaymentFlow
+                      ? "Débito ou crédito"
+                      : "Pagamento"}
                 </InputLabel>
                 <Select
                   value={paymentMethod}
-                  label="Forma..."
+                  label={
+                    activeType === "income"
+                      ? "Recebimento"
+                      : isCardPaymentFlow
+                        ? "Débito ou crédito"
+                        : "Pagamento"
+                  }
                   onChange={handlePaymentMethodChange}
                   sx={{ bgcolor: colors.input, color: colors.text }}
                 >
                   {(activeType === "income"
                     ? RECEIPT_METHODS
-                    : PAYMENT_METHODS
+                    : isCardPaymentFlow
+                      ? (["Débito", "Crédito"] as const)
+                      : PAYMENT_METHODS
                   ).map((m) => (
                     <MenuItem key={m} value={m}>
                       {m}
@@ -1520,7 +1540,7 @@ export default function ControlPage() {
           sx={{ p: 3, borderTop: `1px solid ${colors.border}` }}
         >
           <Button
-            onClick={() => setOpen(false)}
+            onClick={closeTransactionModal}
             color="inherit"
             disabled={isSavingTransaction}
           >

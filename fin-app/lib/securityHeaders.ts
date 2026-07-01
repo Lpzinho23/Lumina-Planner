@@ -9,6 +9,8 @@ export function buildCspValue(env: RuntimeEnv): string {
       : "script-src 'self' 'unsafe-inline'";
   const connectSrc = [
     "connect-src 'self'",
+    "worker-src 'self'",
+    "manifest-src 'self'",
     "https://identitytoolkit.googleapis.com",
     "https://securetoken.googleapis.com",
     "https://firestore.googleapis.com",

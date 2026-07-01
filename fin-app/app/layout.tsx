@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { ThemeContextProvider } from '@/context/ThemeContext';
 import { CssBaseline } from '@mui/material';
 import AppShell from '@/components/AppShell';
+import PwaRegister from '@/components/PwaRegister';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,10 +27,14 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
       { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/icon-maskable.svg', type: 'image/svg+xml', sizes: '512x512' },
     ],
-    apple: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    apple: [
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
   },
 };
 
@@ -48,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeContextProvider>
             <AuthProvider>
                 <CssBaseline />
+                <PwaRegister />
                 <AppShell>
                     {children}
                 </AppShell>

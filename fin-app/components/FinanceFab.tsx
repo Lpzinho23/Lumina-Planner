@@ -22,7 +22,7 @@ const ACTION_ICONS = {
   transfer: SwapHoriz,
   income: TrendingUp,
   expense: TrendingDown,
-  credit: CreditCard,
+  card: CreditCard,
 } as const;
 
 export default function FinanceFab() {

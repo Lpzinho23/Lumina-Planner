@@ -34,4 +34,10 @@ describe("securityHeaders", () => {
     expect(csp).not.toContain("https://*.googleapis.com");
     expect(csp).not.toContain("https://*.firebaseio.com");
   });
+
+  it("permite service worker e manifest no CSP", () => {
+    const csp = buildCspValue("production");
+    expect(csp).toContain("worker-src 'self'");
+    expect(csp).toContain("manifest-src 'self'");
+  });
 });

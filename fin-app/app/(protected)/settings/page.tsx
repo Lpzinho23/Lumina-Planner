@@ -41,7 +41,9 @@ import {
   AccountCircle,
   Save,
   LockReset,
+  GetApp,
 } from "@mui/icons-material";
+import InstallAppSection from "@/components/settings/InstallAppSection";
 import toast from "react-hot-toast";
 import { formatBRL } from "@/lib/format";
 import { isExpenseType } from "@/lib/finance";
@@ -405,6 +407,24 @@ export default function SettingsPage() {
           Membro desde:{" "}
           <strong style={{ color: colors.text }}>{memberSince}</strong>
         </Typography>
+      </Paper>
+
+      <Paper
+        sx={{
+          p: 4,
+          mb: 4,
+          bgcolor: colors.paper,
+          borderRadius: 3,
+          border: `1px solid ${colors.border}`,
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
+          <GetApp sx={{ color: colors.primary }} />
+          <Typography variant="h6" component="h2" color={colors.text}>
+            Instalar aplicativo
+          </Typography>
+        </Stack>
+        <InstallAppSection colors={colors} />
       </Paper>
 
       <Paper

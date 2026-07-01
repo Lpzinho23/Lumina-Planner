@@ -56,7 +56,7 @@ export const NAV_SECTIONS: NavSection[] = [
 
 export const ALL_NAV_ITEMS: NavItem[] = NAV_SECTIONS.flatMap((section) => section.items);
 
-export type FabActionId = "transfer" | "income" | "expense" | "credit";
+export type FabActionId = "transfer" | "income" | "expense" | "card";
 
 export const FAB_ACTIONS: {
   id: FabActionId;
@@ -83,9 +83,9 @@ export const FAB_ACTIONS: {
     path: "/control?open=expense",
   },
   {
-    id: "credit",
-    label: "Despesa no crédito",
+    id: "card",
+    label: "Cartão",
     color: "#fb923c",
-    path: "/control?open=credit",
+    path: "/control?open=card",
   },
 ];

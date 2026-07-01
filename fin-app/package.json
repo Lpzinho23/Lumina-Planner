@@ -17,7 +17,8 @@
     "audit": "npm audit",
     "audit:high": "npm audit --audit-level=high",
     "audit:prod-high": "npm audit --omit=dev --audit-level=high",
-    "security:check": "npm run lint && npm run test && npm run audit:prod-high"
+    "security:check": "npm run lint && npm run test && npm run audit:prod-high",
+    "generate:pwa-icons": "node scripts/generate-pwa-icons.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -40,6 +41,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^16.2.5",
+    "sharp": "^0.35.3",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }
