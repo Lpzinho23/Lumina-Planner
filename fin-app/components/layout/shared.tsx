@@ -1,44 +1,36 @@
 import type { SxProps, Theme } from "@mui/material";
 import type { ThemeColors } from "@/context/ThemeContext";
 
-/** Sidebar fixa só a partir de `lg` (1200px); abaixo disso usa drawer mobile. */
-export const SIDEBAR_DESKTOP_BREAKPOINT = "lg" as const;
+/** Sidebar fixa só a partir de `xl` (1536px); abaixo disso usa drawer mobile. */
+export const SIDEBAR_DESKTOP_BREAKPOINT = "xl" as const;
+
+/** Grade que se adapta à largura disponível (considera sidebar aberta). */
+export const autoFitGrid = (minColumnPx: number): string =>
+  `repeat(auto-fit, minmax(min(100%, ${minColumnPx}px), 1fr))`;
 
 export const contentGridSx: SxProps<Theme> = {
   display: "grid",
-  gridTemplateColumns: {
-    xs: "1fr",
-    md: "repeat(2, 1fr)",
-    xl: "repeat(3, 1fr)",
-  },
+  gridTemplateColumns: autoFitGrid(280),
   gap: { xs: 1.5, sm: 2 },
 };
 
 export const chartsGridSx: SxProps<Theme> = {
   display: "grid",
-  gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
+  gridTemplateColumns: autoFitGrid(360),
   gap: { xs: 1.5, sm: 2 },
 };
 
 /** Grade de 4 indicadores (dashboard, relatórios). */
 export const summaryCardsGridSx: SxProps<Theme> = {
   display: "grid",
-  gridTemplateColumns: {
-    xs: "1fr",
-    sm: "repeat(2, 1fr)",
-    xl: "repeat(4, 1fr)",
-  },
+  gridTemplateColumns: autoFitGrid(240),
   gap: { xs: 1.5, sm: 2 },
   mb: 3,
 };
 
 export const statCardsRowSx: SxProps<Theme> = {
   display: "grid",
-  gridTemplateColumns: {
-    xs: "1fr",
-    sm: "repeat(2, 1fr)",
-    lg: "repeat(3, 1fr)",
-  },
+  gridTemplateColumns: autoFitGrid(260),
   gap: { xs: 1.5, sm: 2 },
   mb: 3,
 };

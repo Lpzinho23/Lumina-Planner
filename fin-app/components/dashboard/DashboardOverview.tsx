@@ -92,7 +92,7 @@ export default function DashboardOverview({
         colors={colors}
       />
 
-      <Box sx={{ ...chartsGridSx, gridTemplateColumns: { xs: "1fr", lg: "1.2fr 0.8fr" }, mb: 2 }}>
+      <Box sx={{ ...chartsGridSx, mb: 2 }}>
         <Paper elevation={0} sx={panelSx(colors)}>
           <Typography variant="h6" component="h2" fontWeight={700} mb={2}>
             Receita nos últimos meses

@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useAppTheme } from "@/context/ThemeContext";
+import { useSidebarLayout } from "@/lib/useSidebarLayout";
 import toast from "react-hot-toast";
 import {
   Box,
@@ -24,13 +25,13 @@ import {
   Menu,
 } from "@mui/icons-material";
 import SidebarNavigation from "@/components/SidebarNavigation";
-import { SIDEBAR_DESKTOP_BREAKPOINT } from "@/components/layout/shared";
 
 const SIDEBAR_WIDTH = 300;
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
   const { colors, isDarkMode, toggleTheme } = useAppTheme();
+  const { isDesktopSidebar } = useSidebarLayout();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -170,78 +171,83 @@ export default function Sidebar() {
 
   return (
     <>
-      <Box
-        component="nav"
-        aria-label="Navegação principal"
-        sx={{
-          width: SIDEBAR_WIDTH,
-          display: { xs: "none", [SIDEBAR_DESKTOP_BREAKPOINT]: "block" },
-          flexShrink: 0,
-        }}
-      >
+      {isDesktopSidebar ? (
         <Box
+          component="nav"
+          aria-label="Navegação principal"
           sx={{
             width: SIDEBAR_WIDTH,
-            height: "100dvh",
+            flexShrink: 0,
+          }}
+        >
+          <Box
+            sx={{
+              width: SIDEBAR_WIDTH,
+              height: "100dvh",
+              position: "fixed",
+              left: 0,
+              top: 0,
+              borderRight: `1px solid ${colors.border}`,
+              zIndex: 1200,
+            }}
+          >
+            {sidebarContent}
+          </Box>
+        </Box>
+      ) : null}
+
+      {!isDesktopSidebar ? (
+        <Box
+          component="header"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
             position: "fixed",
-            left: 0,
             top: 0,
-            borderRight: `1px solid ${colors.border}`,
+            left: 0,
+            right: 0,
             zIndex: 1200,
+            height: "calc(56px + env(safe-area-inset-top))",
+            px: 1.5,
+            pt: "env(safe-area-inset-top)",
+            bgcolor: sidebarBg,
+            borderBottom: `1px solid ${colors.border}`,
+          }}
+        >
+          <IconButton
+            onClick={() => setMobileOpen(true)}
+            aria-label="Abrir menu de navegação"
+            sx={{ color: colors.text }}
+          >
+            <Menu />
+          </IconButton>
+          <Typography variant="subtitle1" fontWeight={800} color={colors.text}>
+            Lumina
+          </Typography>
+          <IconButton
+            onClick={toggleTheme}
+            aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
+            sx={{ color: colors.textSecondary }}
+          >
+            {isDarkMode ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+          </IconButton>
+        </Box>
+      ) : null}
+
+      {!isDesktopSidebar ? (
+        <Drawer
+          anchor="left"
+          open={mobileOpen}
+          onClose={closeMobile}
+          ModalProps={{ keepMounted: true }}
+          PaperProps={{
+            sx: { width: SIDEBAR_WIDTH, maxWidth: "88vw" },
           }}
         >
           {sidebarContent}
-        </Box>
-      </Box>
-
-      <Box
-        component="header"
-        sx={{
-          display: { xs: "flex", [SIDEBAR_DESKTOP_BREAKPOINT]: "none" },
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1200,
-          height: "calc(56px + env(safe-area-inset-top))",
-          px: 1.5,
-          pt: "env(safe-area-inset-top)",
-          bgcolor: sidebarBg,
-          borderBottom: `1px solid ${colors.border}`,
-        }}
-      >
-        <IconButton
-          onClick={() => setMobileOpen(true)}
-          aria-label="Abrir menu de navegação"
-          sx={{ color: colors.text }}
-        >
-          <Menu />
-        </IconButton>
-        <Typography variant="subtitle1" fontWeight={800} color={colors.text}>
-          Lumina
-        </Typography>
-        <IconButton
-          onClick={toggleTheme}
-          aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
-          sx={{ color: colors.textSecondary }}
-        >
-          {isDarkMode ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
-        </IconButton>
-      </Box>
-
-      <Drawer
-        anchor="left"
-        open={mobileOpen}
-        onClose={closeMobile}
-        ModalProps={{ keepMounted: true }}
-        PaperProps={{
-          sx: { width: SIDEBAR_WIDTH, maxWidth: "88vw" },
-        }}
-      >
-        {sidebarContent}
-      </Drawer>
+        </Drawer>
+      ) : null}
     </>
   );
 }

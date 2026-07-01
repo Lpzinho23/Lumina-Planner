@@ -51,7 +51,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/GridLegacy";
-import { sectionHeaderSx } from "@/components/layout/shared";
+import { sectionHeaderSx, summaryCardsGridSx } from "@/components/layout/shared";
 import {
   TrendingUp,
   TrendingDown,
@@ -744,48 +744,40 @@ export default function ControlPage() {
         </FormControl>
       </Paper>
 
-      <Grid container spacing={3} mb={4}>
-        <Grid item xs={12} sm={6} lg={3}>
-          <TopSummaryCard
-            title="Saldo em Conta"
-            value={totalAccountsBalance}
-            icon={<AccountBalanceWallet />}
-            color="#a78bfa"
-            bg="#2e1065"
-            colors={colors}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} lg={3}>
-          <TopSummaryCard
-            title="Total Recebido"
-            value={sumIncomes}
-            icon={<TrendingUp />}
-            color="#4ade80"
-            bg="#14532d"
-            colors={colors}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} lg={3}>
-          <TopSummaryCard
-            title="Total Gasto"
-            value={sumExpenses}
-            icon={<TrendingDown />}
-            color="#f87171"
-            bg="#450a0a"
-            colors={colors}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} lg={3}>
-          <TopSummaryCard
-            title="Guardado (Mês)"
-            value={sumSavedMonth}
-            icon={<Savings />}
-            color="#60a5fa"
-            bg="#172554"
-            colors={colors}
-          />
-        </Grid>
-      </Grid>
+      <Box sx={{ ...summaryCardsGridSx, mb: 4 }}>
+        <TopSummaryCard
+          title="Saldo em Conta"
+          value={totalAccountsBalance}
+          icon={<AccountBalanceWallet />}
+          color="#a78bfa"
+          bg="#2e1065"
+          colors={colors}
+        />
+        <TopSummaryCard
+          title="Total Recebido"
+          value={sumIncomes}
+          icon={<TrendingUp />}
+          color="#4ade80"
+          bg="#14532d"
+          colors={colors}
+        />
+        <TopSummaryCard
+          title="Total Gasto"
+          value={sumExpenses}
+          icon={<TrendingDown />}
+          color="#f87171"
+          bg="#450a0a"
+          colors={colors}
+        />
+        <TopSummaryCard
+          title="Guardado (Mês)"
+          value={sumSavedMonth}
+          icon={<Savings />}
+          color="#60a5fa"
+          bg="#172554"
+          colors={colors}
+        />
+      </Box>
 
       <Box mb={4}>
         <Box sx={sectionHeaderSx}>
