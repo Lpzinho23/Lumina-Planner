@@ -19,6 +19,7 @@ import {
   PieChart as PieIcon,
   Radar as RadarIcon,
   RestartAlt,
+  DashboardCustomize,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import {
@@ -44,7 +45,7 @@ import EvolucaoDespesasCharts from "@/components/dashboard/EvolucaoDespesasChart
 import FontesRenda from "@/components/dashboard/FontesRenda";
 import EvolucaoDespesasAnalise from "@/components/dashboard/EvolucaoDespesasAnalise";
 import CrescimentoPatrimonial from "@/components/dashboard/CrescimentoPatrimonial";
-import SummaryCards from "@/components/dashboard/SummaryCards";
+import DashboardOverview from "@/components/dashboard/DashboardOverview";
 
 const DashboardGrid = dynamic(() => import("@/components/DashboardGrid"), {
   ssr: false,
@@ -305,6 +306,12 @@ export default function DashboardPage() {
       }, []);
   }, [transactions, currentMonth, currentYear]);
 
+  const recentTransactions = useMemo(() => {
+    return [...transactions]
+      .sort((a, b) => parseISODateUTC(b.date).getTime() - parseISODateUTC(a.date).getTime())
+      .slice(0, 5);
+  }, [transactions]);
+
   const gridItemStyle = {
     display: "flex",
     flexDirection: "column" as const,
@@ -316,45 +323,34 @@ export default function DashboardPage() {
   };
 
   return (
-    <Box maxWidth="xl" sx={{ mx: "auto", p: { xs: 0, sm: 2 } }}>
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        justifyContent="space-between"
-        alignItems={{ xs: "flex-start", sm: "center" }}
-        mb={3}
-        gap={2}
+    <Box maxWidth="xl" sx={{ mx: "auto", p: { xs: 0, sm: 1 } }}>
+      <Paper
+        sx={{
+          p: 1.5,
+          px: 2,
+          borderRadius: 3,
+          bgcolor: colors.paper,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 3,
+          border: `1px solid ${colors.border}`,
+          boxShadow: "0 1px 3px rgba(15, 23, 42, 0.06)",
+        }}
       >
-        <Box>
-          <Typography variant="h4" component="h1" fontWeight="bold" sx={{ color: colors.text }}>
-            Dashboard
-          </Typography>
-          <Typography variant="body2" color={colors.textSecondary} mt={0.5}>
-            {MONTHS_LIST[currentMonth]} · {currentYear}
-          </Typography>
-        </Box>
-        <Paper
-          sx={{
-            p: 1,
-            px: 2,
-            borderRadius: 3,
-            bgcolor: colors.paper,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 2,
-            alignItems: "center",
-            width: { xs: "100%", sm: "auto" },
-          }}
-        >
-          <Typography variant="caption" fontWeight="bold" color={colors.textSecondary}>
-            PERÍODO:
-          </Typography>
-          <FormControl size="small" variant="standard" sx={{ minWidth: 100 }}>
+        <Typography variant="body2" fontWeight={600} color={colors.textSecondary}>
+          Período selecionado
+        </Typography>
+        <Stack direction="row" spacing={1.5} alignItems="center" flexWrap="wrap">
+          <FormControl size="small" variant="standard" sx={{ minWidth: 110 }}>
             <Select
               value={currentMonth}
               onChange={(e) => setCurrentMonth(Number(e.target.value))}
               disableUnderline
               inputProps={{ "aria-label": "Selecionar mês do dashboard" }}
-              sx={{ color: colors.text, fontWeight: "bold" }}
+              sx={{ color: colors.text, fontWeight: 700 }}
               MenuProps={{
                 PaperProps: { sx: { bgcolor: colors.paper, color: colors.text } },
               }}
@@ -366,13 +362,13 @@ export default function DashboardPage() {
               ))}
             </Select>
           </FormControl>
-          <FormControl size="small" variant="standard" sx={{ minWidth: 60 }}>
+          <FormControl size="small" variant="standard" sx={{ minWidth: 72 }}>
             <Select
               value={currentYear}
               onChange={(e) => setCurrentYear(Number(e.target.value))}
               disableUnderline
               inputProps={{ "aria-label": "Selecionar ano do dashboard" }}
-              sx={{ color: colors.text, fontWeight: "bold" }}
+              sx={{ color: colors.text, fontWeight: 700 }}
               MenuProps={{
                 PaperProps: { sx: { bgcolor: colors.paper, color: colors.text } },
               }}
@@ -381,17 +377,18 @@ export default function DashboardPage() {
               <MenuItem value={2026}>2026</MenuItem>
             </Select>
           </FormControl>
-        </Paper>
-      </Stack>
+        </Stack>
+      </Paper>
 
-      <SummaryCards
-        monthlyIncome={yearlyTrendData[currentMonth]?.Entradas ?? 0}
-        monthlyExpenses={yearlyTrendData[currentMonth]?.Saídas ?? 0}
-        totalInvested={totalInvestedGlobal}
-        colors={colors}
-      />
-
-      <Paper sx={{ bgcolor: colors.paper, borderRadius: 3, mb: 3, border: `1px solid ${colors.border}` }}>
+      <Paper
+        sx={{
+          bgcolor: colors.paper,
+          borderRadius: 3,
+          mb: 3,
+          border: `1px solid ${colors.border}`,
+          boxShadow: "0 1px 3px rgba(15, 23, 42, 0.06)",
+        }}
+      >
         <Tabs
           value={tabValue}
           onChange={(_e, v) => setTabValue(v)}
@@ -400,19 +397,34 @@ export default function DashboardPage() {
           indicatorColor="secondary"
           aria-label="Abas do dashboard financeiro"
           sx={{
-            "& .MuiTab-root": { color: colors.textSecondary, fontWeight: "bold" },
+            px: 1,
+            "& .MuiTab-root": { color: colors.textSecondary, fontWeight: 600, minHeight: 56 },
             "& .Mui-selected": { color: `${colors.primary} !important` },
-            "& .MuiTabs-indicator": { backgroundColor: colors.primary },
+            "& .MuiTabs-indicator": { backgroundColor: colors.primary, height: 3, borderRadius: 2 },
           }}
         >
           <Tab icon={<PieIcon />} iconPosition="start" label="Visão Geral" />
           <Tab icon={<TrendingUp />} iconPosition="start" label="Meus Ganhos" />
           <Tab icon={<RadarIcon />} iconPosition="start" label="Análise de Gastos" />
           <Tab icon={<Savings />} iconPosition="start" label="Investimentos" />
+          <Tab icon={<DashboardCustomize />} iconPosition="start" label="Painéis" />
         </Tabs>
       </Paper>
 
       {tabValue === 0 && (
+        <DashboardOverview
+          yearlyTrendData={yearlyTrendData}
+          monthlyIncome={yearlyTrendData[currentMonth]?.Entradas ?? 0}
+          monthlyExpenses={yearlyTrendData[currentMonth]?.Saídas ?? 0}
+          totalInvested={totalInvestedGlobal}
+          topExpensesData={topExpensesData}
+          recentTransactions={recentTransactions}
+          colors={colors}
+          isDarkMode={isDarkMode}
+        />
+      )}
+
+      {tabValue === 4 && (
         <Box sx={{ width: "100%" }}>
           <Stack
             direction="row"

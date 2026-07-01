@@ -21,7 +21,6 @@ import {
   Button,
   DialogActions,
   ButtonBase,
-  Tooltip,
   IconButton,
   BottomNavigation,
   BottomNavigationAction,
@@ -39,6 +38,24 @@ import {
   LightMode,
   DarkMode,
 } from "@mui/icons-material";
+
+const menuItems = [
+  {
+    name: "Visão Geral",
+    icon: <Dashboard fontSize="small" />,
+    path: "/dashboard",
+  },
+  {
+    name: "Fluxo de Caixa",
+    icon: <ReceiptLong fontSize="small" />,
+    path: "/control",
+  },
+  {
+    name: "Configurações",
+    icon: <Settings fontSize="small" />,
+    path: "/settings",
+  },
+];
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
@@ -106,14 +123,25 @@ export default function Sidebar() {
   }, [transactions, cards]);
 
   const { globalBalance, totalInvested, availableLimit } = totals;
+  const sidebarBg = isDarkMode ? "#111115" : "#ffffff";
 
-  const menuItems = [
-    { name: "Dashboard", icon: <Dashboard fontSize="small" />, path: "/dashboard" },
-    { name: "Controle", icon: <ReceiptLong fontSize="small" />, path: "/control" },
-    { name: "Configurações", icon: <Settings fontSize="small" />, path: "/settings" },
-  ];
-
-  const sidebarBg = isDarkMode ? "#111115" : "#fafafa";
+  const navButtonSx = (isActive: boolean) => ({
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: 1.25,
+    px: 1.75,
+    py: 1.1,
+    borderRadius: 2.5,
+    bgcolor: isActive ? colors.primary : "transparent",
+    color: isActive ? "#ffffff" : colors.textSecondary,
+    boxShadow: isActive ? "0 8px 20px rgba(124, 58, 237, 0.28)" : "none",
+    transition: "all 0.15s ease",
+    "&:hover": {
+      bgcolor: isActive ? colors.primary : isDarkMode ? "rgba(255,255,255,0.05)" : "#f4f5f8",
+      color: isActive ? "#ffffff" : colors.text,
+    },
+  });
 
   return (
     <>
@@ -131,71 +159,38 @@ export default function Sidebar() {
           left: 0,
           top: 0,
           zIndex: 1200,
-          transition: "background-color 0.3s ease",
-          overflow: "hidden",
+          boxShadow: isDarkMode ? "none" : "0 0 0 1px rgba(15,23,42,0.02)",
         }}
       >
-        {/* Logo + Theme toggle */}
-        <Box sx={{ px: 3, pt: 3, pb: 2 }}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row" alignItems="center" gap={1.5}>
-              <Box
-                aria-hidden="true"
-                sx={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "10px",
-                  bgcolor: "#7c3aed",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                  boxShadow: "0 4px 14px rgba(124,58,237,0.4)",
-                }}
-              >
-                <ShowChart sx={{ fontSize: 20, color: "#fff" }} />
-              </Box>
-              <Typography
-                variant="h6"
-                fontWeight={800}
-                letterSpacing="-0.5px"
-                sx={{ color: colors.text, userSelect: "none" }}
-              >
-                Lumina Planner
-              </Typography>
-            </Stack>
-            <Tooltip
-              title={isDarkMode ? "Modo claro" : "Modo escuro"}
-              placement="right"
+        <Box sx={{ px: 2.5, pt: 3, pb: 2 }}>
+          <Stack direction="row" alignItems="center" gap={1.25}>
+            <Box
+              aria-hidden="true"
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 2.5,
+                bgcolor: colors.primary,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 8px 20px rgba(124, 58, 237, 0.28)",
+              }}
             >
-              <IconButton
-                size="small"
-                onClick={toggleTheme}
-                aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
-                sx={{
-                  color: colors.textSecondary,
-                  "&:hover": {
-                    color: colors.text,
-                    bgcolor: isDarkMode
-                      ? "rgba(255,255,255,0.06)"
-                      : "rgba(0,0,0,0.05)",
-                  },
-                }}
-              >
-                {isDarkMode ? (
-                  <LightMode fontSize="small" />
-                ) : (
-                  <DarkMode fontSize="small" />
-                )}
-              </IconButton>
-            </Tooltip>
+              <ShowChart sx={{ fontSize: 22, color: "#fff" }} />
+            </Box>
+            <Box>
+              <Typography variant="subtitle1" fontWeight={800} color={colors.text}>
+                Lumina
+              </Typography>
+              <Typography variant="caption" color={colors.textSecondary}>
+                Admin Panel
+              </Typography>
+            </Box>
           </Stack>
         </Box>
 
-        <Divider sx={{ borderColor: colors.border, mx: 2, mb: 2 }} />
-
-        {/* Profile button */}
-        <Box sx={{ px: 2, mb: 3 }}>
+        <Box sx={{ px: 2, mb: 2 }}>
           <ButtonBase
             onClick={handleOpenProfile}
             aria-label="Abrir resumo financeiro do perfil"
@@ -203,77 +198,39 @@ export default function Sidebar() {
               width: "100%",
               display: "flex",
               alignItems: "center",
-              gap: 1.5,
+              gap: 1.25,
               p: 1.5,
               borderRadius: 3,
-              bgcolor: isDarkMode
-                ? "rgba(255,255,255,0.04)"
-                : "rgba(0,0,0,0.03)",
+              bgcolor: isDarkMode ? "rgba(255,255,255,0.04)" : "#f7f8fb",
               border: `1px solid ${colors.border}`,
               textAlign: "left",
-              transition: "all 0.2s",
-              "&:hover": {
-                bgcolor: isDarkMode
-                  ? "rgba(124,58,237,0.10)"
-                  : "rgba(124,58,237,0.06)",
-                borderColor: "#7c3aed",
-              },
             }}
           >
             <Avatar
               src={user?.photoURL || undefined}
               sx={{
-                bgcolor: "#7c3aed",
-                width: 36,
-                height: 36,
+                bgcolor: colors.primary,
+                width: 42,
+                height: 42,
                 fontWeight: "bold",
                 color: "#fff",
-                fontSize: "0.95rem",
-                flexShrink: 0,
               }}
             >
               {user?.displayName?.[0]?.toUpperCase() ?? <Person fontSize="small" />}
             </Avatar>
             <Box overflow="hidden" flex={1}>
-              <Typography
-                variant="subtitle2"
-                fontWeight={700}
-                color={colors.text}
-                noWrap
-                sx={{ lineHeight: 1.3 }}
-              >
+              <Typography variant="body2" fontWeight={700} color={colors.text} noWrap>
                 {user?.displayName ?? "Usuário"}
               </Typography>
-              <Typography
-                variant="caption"
-                color={colors.textSecondary}
-                noWrap
-                display="block"
-                sx={{ lineHeight: 1.4 }}
-              >
-                {user?.email}
+              <Typography variant="caption" color={colors.textSecondary} noWrap display="block">
+                Finanças pessoais
               </Typography>
             </Box>
           </ButtonBase>
         </Box>
 
-        {/* Navigation items */}
         <Box sx={{ px: 2, flex: 1 }}>
-          <Typography
-            variant="caption"
-            fontWeight={700}
-            color={colors.textSecondary}
-            sx={{
-              px: 1,
-              mb: 1,
-              display: "block",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-            }}
-          >
-            Navegação
-          </Typography>
-          <Stack spacing={0.5} mt={1}>
+          <Stack spacing={0.75}>
             {menuItems.map((item) => {
               const isActive = pathname === item.path;
               return (
@@ -282,41 +239,10 @@ export default function Sidebar() {
                   onClick={() => router.push(item.path)}
                   aria-label={`Ir para ${item.name}`}
                   aria-current={isActive ? "page" : undefined}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.5,
-                    px: 2,
-                    py: 1.2,
-                    borderRadius: 2,
-                    borderLeft: `3px solid ${isActive ? "#7c3aed" : "transparent"}`,
-                    bgcolor: isActive
-                      ? isDarkMode
-                        ? "rgba(124,58,237,0.12)"
-                        : "rgba(124,58,237,0.07)"
-                      : "transparent",
-                    color: isActive ? "#7c3aed" : colors.textSecondary,
-                    transition: "all 0.15s ease",
-                    "&:hover": {
-                      bgcolor: isActive
-                        ? isDarkMode
-                          ? "rgba(124,58,237,0.16)"
-                          : "rgba(124,58,237,0.10)"
-                        : isDarkMode
-                          ? "rgba(255,255,255,0.05)"
-                          : "rgba(0,0,0,0.04)",
-                      color: isActive ? "#7c3aed" : colors.text,
-                    },
-                  }}
+                  sx={navButtonSx(isActive)}
                 >
                   <Box sx={{ display: "flex", color: "inherit" }}>{item.icon}</Box>
-                  <Typography
-                    variant="body2"
-                    fontWeight={isActive ? 700 : 500}
-                    color="inherit"
-                    sx={{ lineHeight: 1 }}
-                  >
+                  <Typography variant="body2" fontWeight={isActive ? 700 : 500} color="inherit">
                     {item.name}
                   </Typography>
                 </ButtonBase>
@@ -325,30 +251,34 @@ export default function Sidebar() {
           </Stack>
         </Box>
 
-        {/* Logout */}
-        <Divider sx={{ borderColor: colors.border, mx: 2, mb: 1 }} />
-        <Box sx={{ px: 2, pb: 3 }}>
-          <ButtonBase
-            onClick={handleLogout}
-            aria-label="Sair da conta"
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              px: 2,
-              py: 1.2,
-              borderRadius: 2,
-              color: "#ef4444",
-              transition: "all 0.15s ease",
-              "&:hover": { bgcolor: "rgba(239,68,68,0.08)" },
-            }}
-          >
-            <Logout fontSize="small" />
-            <Typography variant="body2" fontWeight={500} color="inherit">
-              Sair da Conta
-            </Typography>
-          </ButtonBase>
+        <Divider sx={{ borderColor: colors.border, mx: 2 }} />
+        <Box sx={{ px: 2, py: 2.5 }}>
+          <Stack spacing={0.75}>
+            <ButtonBase
+              onClick={toggleTheme}
+              aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
+              sx={navButtonSx(false)}
+            >
+              {isDarkMode ? <LightMode fontSize="small" /> : <DarkMode fontSize="small" />}
+              <Typography variant="body2" fontWeight={500}>
+                {isDarkMode ? "Modo claro" : "Modo escuro"}
+              </Typography>
+            </ButtonBase>
+            <ButtonBase
+              onClick={handleLogout}
+              aria-label="Sair da conta"
+              sx={{
+                ...navButtonSx(false),
+                color: colors.danger,
+                "&:hover": { bgcolor: "rgba(239,68,68,0.08)", color: colors.danger },
+              }}
+            >
+              <Logout fontSize="small" />
+              <Typography variant="body2" fontWeight={500}>
+                Sair
+              </Typography>
+            </ButtonBase>
+          </Stack>
         </Box>
       </Box>
 
@@ -369,31 +299,28 @@ export default function Sidebar() {
           pt: "env(safe-area-inset-top)",
           bgcolor: sidebarBg,
           borderBottom: `1px solid ${colors.border}`,
-          backdropFilter: "blur(16px)",
         }}
       >
         <Stack direction="row" alignItems="center" gap={1.25}>
           <Box
-            aria-hidden="true"
             sx={{
               width: 36,
               height: 36,
-              borderRadius: "12px",
-              bgcolor: "#7c3aed",
+              borderRadius: 2,
+              bgcolor: colors.primary,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 4px 14px rgba(124,58,237,0.35)",
             }}
           >
             <ShowChart sx={{ fontSize: 20, color: "#fff" }} />
           </Box>
           <Box>
             <Typography variant="subtitle1" fontWeight={800} color={colors.text}>
-              Lumina Planner
+              Lumina
             </Typography>
             <Typography variant="caption" color={colors.textSecondary}>
-              Planejamento financeiro
+              Admin Panel
             </Typography>
           </Box>
         </Stack>
@@ -439,7 +366,7 @@ export default function Sidebar() {
             minWidth: 0,
           },
           "& .Mui-selected": {
-            color: "#7c3aed",
+            color: colors.primary,
           },
         }}
       >
@@ -454,7 +381,6 @@ export default function Sidebar() {
         ))}
       </BottomNavigation>
 
-      {/* Profile / Financial Summary Dialog */}
       <Dialog
         open={profileOpen}
         onClose={handleCloseProfile}
@@ -464,7 +390,6 @@ export default function Sidebar() {
             color: colors.text,
             width: "calc(100vw - 32px)",
             maxWidth: 420,
-            minWidth: 0,
             borderRadius: 4,
             border: `1px solid ${colors.border}`,
           },
@@ -486,7 +411,7 @@ export default function Sidebar() {
               sx={{
                 width: 80,
                 height: 80,
-                bgcolor: "#7c3aed",
+                bgcolor: colors.primary,
                 fontSize: 40,
                 mb: 1.5,
                 fontWeight: "bold",
@@ -559,10 +484,6 @@ export default function Sidebar() {
               color: colors.text,
               py: 1.5,
               textTransform: "none",
-              "&:hover": {
-                borderColor: "#7c3aed",
-                bgcolor: isDarkMode ? "#7c3aed10" : "#7c3aed05",
-              },
             }}
           >
             Ir para Configurações

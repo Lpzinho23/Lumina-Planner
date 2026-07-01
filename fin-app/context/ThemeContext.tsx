@@ -14,14 +14,14 @@ const darkColors = {
 } as const;
 
 const lightColors = {
-  background: "#f4f4f5",
+  background: "#eef0f4",
   paper: "#ffffff",
-  input: "#e4e4e7",
-  text: "#18181b",
-  textSecondary: "#71717a",
+  input: "#f4f4f5",
+  text: "#1e1e2e",
+  textSecondary: "#6b7280",
   primary: "#7c3aed",
-  border: "#d4d4d8",
-  danger: "#dc2626",
+  border: "#e8eaef",
+  danger: "#ef4444",
 } as const;
 
 export type ThemeColors = typeof darkColors | typeof lightColors;
@@ -43,10 +43,10 @@ export const useAppTheme = (): ThemeContextValue => {
 };
 
 function readInitialDarkMode(): boolean {
-  if (typeof window === "undefined") return true;
+  if (typeof window === "undefined") return false;
   const saved = localStorage.getItem("themeMode");
   if (saved) return saved === "dark";
-  return true;
+  return false;
 }
 
 export const ThemeContextProvider = ({ children }: { children: React.ReactNode }) => {
