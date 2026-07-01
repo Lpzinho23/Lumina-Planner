@@ -12,6 +12,14 @@ const AUTH_ERROR_MESSAGES: Record<string, string> = {
   "auth/requires-recent-login":
     "Confirme sua senha atual para concluir esta ação.",
   "auth/weak-password": "A senha informada é muito fraca.",
+  "auth/invalid-api-key":
+    "Chave do Firebase inválida. Confira NEXT_PUBLIC_FIREBASE_API_KEY na Vercel e faça Redeploy.",
+  "auth/api-key-not-valid.-please-pass-a-valid-api-key.":
+    "Chave do Firebase inválida. Confira NEXT_PUBLIC_FIREBASE_API_KEY na Vercel e faça Redeploy.",
+  "auth/operation-not-allowed":
+    "Cadastro por e-mail desativado no Firebase. Ative E-mail/senha em Authentication → Sign-in method.",
+  "auth/unauthorized-domain":
+    "Domínio não autorizado. Adicione seu domínio Vercel em Firebase → Authentication → Settings → Authorized domains.",
 };
 
 export function extractAuthErrorCode(error: unknown): string | undefined {

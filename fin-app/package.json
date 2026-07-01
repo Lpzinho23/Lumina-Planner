@@ -7,11 +7,13 @@
   },
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/verify-firebase-env.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "firebase:check": "node scripts/check-firebase-api-key.mjs",
     "audit": "npm audit",
     "audit:high": "npm audit --audit-level=high",
     "audit:prod-high": "npm audit --omit=dev --audit-level=high",

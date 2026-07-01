@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { extractAuthErrorCode, getAuthFriendlyMessage } from "@/lib/authErrors";
+import FirebaseConfigAlert from "@/components/FirebaseConfigAlert";
 
 // Mesma paleta do Login
 const colors = {
@@ -113,6 +114,7 @@ export default function CadastroPage() {
         }}
       >
         <Box component="form" onSubmit={handleRegister}>
+          <FirebaseConfigAlert />
           <Box mb={4} textAlign="center">
             <Box
               sx={{

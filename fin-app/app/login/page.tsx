@@ -27,6 +27,7 @@ import {
   extractAuthErrorCode,
   getAuthFriendlyMessage,
 } from "@/lib/authErrors";
+import FirebaseConfigAlert from "@/components/FirebaseConfigAlert";
 
 const colors = {
   accentPurple: "#7c3aed",
@@ -146,6 +147,7 @@ function LoginForm() {
         }}
       >
         <Box component="form" onSubmit={handleLogin}>
+          <FirebaseConfigAlert />
           <Box mb={4} textAlign="center">
             <Stack
               direction="row"

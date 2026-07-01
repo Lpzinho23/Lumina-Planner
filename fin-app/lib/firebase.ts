@@ -7,43 +7,12 @@ import {
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import {
+  getMissingFirebaseEnvKeys,
+  readFirebaseEnvFromProcess,
+} from "@/lib/firebaseConfig";
 
-/**
- * Acesso estático obrigatório: Turbopack/Webpack só substitui NEXT_PUBLIC_*
- * quando a propriedade é acessada de forma literal (análise estática).
- * Acesso dinâmico via process.env[variavel] resulta em undefined no bundle.
- */
-const RAW_ENV = {
-  NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "",
-  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
-    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "",
-  NEXT_PUBLIC_FIREBASE_PROJECT_ID:
-    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "",
-  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:
-    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? "",
-  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:
-    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "",
-  NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "",
-} as const;
-
-type FirebaseEnvKey = keyof typeof RAW_ENV;
-
-const FIREBASE_ENV_KEYS = Object.keys(RAW_ENV) as FirebaseEnvKey[];
-
-function sanitize(raw: string): string {
-  let value = raw.replace(/^\uFEFF/, "").replace(/\r/g, "").trim();
-  if (
-    (value.startsWith('"') && value.endsWith('"')) ||
-    (value.startsWith("'") && value.endsWith("'"))
-  ) {
-    value = value.slice(1, -1).trim();
-  }
-  return value;
-}
-
-function readEnv(key: FirebaseEnvKey): string {
-  return sanitize(RAW_ENV[key]);
-}
+const env = readFirebaseEnvFromProcess();
 
 function fingerprintConfig(config: FirebaseOptions): string {
   return JSON.stringify({
@@ -81,7 +50,7 @@ function getOrCreateFirebaseApp(config: FirebaseOptions): FirebaseApp {
 }
 
 export function getMissingFirebaseEnv(): string[] {
-  return FIREBASE_ENV_KEYS.filter((k) => !readEnv(k));
+  return getMissingFirebaseEnvKeys(env);
 }
 
 const missing = getMissingFirebaseEnv();
@@ -99,15 +68,15 @@ if (process.env.NODE_ENV === "production" && missing.length > 0) {
 }
 
 const firebaseConfig: FirebaseOptions = {
-  apiKey: readEnv("NEXT_PUBLIC_FIREBASE_API_KEY") || "missing-api-key",
+  apiKey: env.NEXT_PUBLIC_FIREBASE_API_KEY || "missing-api-key",
   authDomain:
-    readEnv("NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN") || "missing.firebaseapp.com",
-  projectId: readEnv("NEXT_PUBLIC_FIREBASE_PROJECT_ID") || "missing-project",
+    env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "missing.firebaseapp.com",
+  projectId: env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "missing-project",
   storageBucket:
-    readEnv("NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET") || "missing.appspot.com",
+    env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "missing.appspot.com",
   messagingSenderId:
-    readEnv("NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID") || "000000000000",
-  appId: readEnv("NEXT_PUBLIC_FIREBASE_APP_ID") || "1:000000000000:web:missing",
+    env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "000000000000",
+  appId: env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:000000000000:web:missing",
 };
 
 const app = getOrCreateFirebaseApp(firebaseConfig);
