@@ -57,13 +57,16 @@ export default function SettingsPage() {
   const { isDarkMode, toggleTheme, colors } = useAppTheme();
   const { transactions } = useTransactions(user?.uid);
 
-  const [name, setName] = useState("");
+  const [nameDraft, setNameDraft] = useState("");
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState("");
+  const [photoOverride, setPhotoOverride] = useState("");
   const [photoPreviewObjectUrl, setPhotoPreviewObjectUrl] = useState<string | null>(
     null,
   );
   const [profileLoading, setProfileLoading] = useState(false);
+
+  const name = nameDraft || user?.displayName || "";
+  const photoPreview = photoOverride || user?.photoURL || "";
 
   const [isResettingData, setIsResettingData] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -100,11 +103,6 @@ export default function SettingsPage() {
       count: transactions.length,
     };
   }, [transactions]);
-
-  useEffect(() => {
-    if (user?.displayName) setName(user.displayName);
-    if (user?.photoURL) setPhotoPreview(user.photoURL);
-  }, [user]);
 
   useEffect(() => {
     return () => {
@@ -156,7 +154,7 @@ export default function SettingsPage() {
     const objectUrl = URL.createObjectURL(file);
     setPhotoPreviewObjectUrl(objectUrl);
     setPhotoFile(file);
-    setPhotoPreview(objectUrl);
+    setPhotoOverride(objectUrl);
   };
 
   const applyPasswordChange = async (currentPassword?: string) => {
@@ -452,7 +450,7 @@ export default function SettingsPage() {
                   label="Nome"
                   fullWidth
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setNameDraft(e.target.value)}
                   sx={{
                     "& .MuiOutlinedInput-root": { color: colors.text, bgcolor: colors.input },
                     "& .MuiInputLabel-root": { color: colors.textSecondary },

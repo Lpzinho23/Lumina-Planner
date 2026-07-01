@@ -68,13 +68,19 @@ export function createCustomTooltipContent(
   isDarkMode: boolean,
   colors: ThemeColors,
 ): (props: TooltipContentProps) => ReactNode {
-  return (props) => (
-    <CustomTooltip
-      active={props.active}
-      payload={props.payload}
-      label={props.label}
-      isDarkMode={isDarkMode}
-      colors={colors}
-    />
-  );
+  function CustomTooltipContent(props: TooltipContentProps) {
+    return (
+      <CustomTooltip
+        active={props.active}
+        payload={props.payload}
+        label={props.label}
+        isDarkMode={isDarkMode}
+        colors={colors}
+      />
+    );
+  }
+
+  CustomTooltipContent.displayName = "CustomTooltipContent";
+
+  return CustomTooltipContent;
 }
