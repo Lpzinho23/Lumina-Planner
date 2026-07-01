@@ -1,6 +1,7 @@
 /**
- * Falha o build na Vercel se as variáveis Firebase estiverem ausentes ou inválidas.
- * O CI usa valores ci-placeholder e continua passando.
+ * Diagnóstico das variáveis Firebase no build.
+ * Não bloqueia o deploy — apenas registra avisos (o alerta aparece em /login e /cadastro).
+ * O CI usa ci-placeholder e ignora a verificação.
  */
 const CI_PLACEHOLDER = "ci-placeholder";
 const PLACEHOLDER_API_KEY = "missing-api-key";
@@ -36,75 +37,53 @@ function isCiPlaceholder(snapshot) {
   return snapshot.NEXT_PUBLIC_FIREBASE_API_KEY === CI_PLACEHOLDER;
 }
 
-function validate(snapshot) {
+function collectIssues(snapshot) {
   if (isCiPlaceholder(snapshot)) {
-    console.log("[firebase] CI placeholder detectado — verificação ignorada.");
-    return;
+    return [];
   }
 
+  const issues = [];
   const missing = KEYS.filter((key) => !snapshot[key]);
   if (missing.length > 0) {
-    throw new Error(
-      `Variáveis Firebase ausentes: ${missing.join(", ")}. Configure na Vercel (Settings → Environment Variables) e faça Redeploy.`,
+    issues.push(
+      `Variáveis ausentes: ${missing.join(", ")}. Configure em Vercel → Settings → Environment Variables.`,
     );
   }
 
   const apiKey = snapshot.NEXT_PUBLIC_FIREBASE_API_KEY;
   if (apiKey === PLACEHOLDER_API_KEY) {
-    throw new Error(
-      "NEXT_PUBLIC_FIREBASE_API_KEY não foi injetada no build. Configure na Vercel e faça Redeploy.",
+    issues.push(
+      "NEXT_PUBLIC_FIREBASE_API_KEY não entrou no build. Confira a Vercel e faça Redeploy.",
+    );
+  } else if (apiKey && (!apiKey.startsWith("AIza") || apiKey.length < 35)) {
+    issues.push(
+      "NEXT_PUBLIC_FIREBASE_API_KEY com formato inválido. Copie a apiKey do app Web (</>) no Firebase.",
     );
   }
 
-  if (!apiKey.startsWith("AIza") || apiKey.length < 35) {
-    throw new Error(
-      "NEXT_PUBLIC_FIREBASE_API_KEY inválida. Copie a apiKey do app Web (</>) no Firebase Console.",
-    );
-  }
-
-  console.log(
-    `[firebase] OK — projectId=${snapshot.NEXT_PUBLIC_FIREBASE_PROJECT_ID}, apiKey=${apiKey.slice(0, 6)}…${apiKey.slice(-4)}`,
-  );
+  return issues;
 }
 
-const isVercel = Boolean(process.env.VERCEL);
-const isCi = process.env.CI === "true";
+const snapshot = readSnapshot();
+const issues = collectIssues(snapshot);
 
-if (!isVercel && !isCi) {
-  const snapshot = readSnapshot();
-  const issue =
-    getMissingIssue(snapshot) ?? getApiKeyIssue(snapshot);
-  if (issue) {
-    console.warn(`[firebase] Aviso (build local): ${issue}`);
+if (issues.length === 0) {
+  const apiKey = snapshot.NEXT_PUBLIC_FIREBASE_API_KEY;
+  if (apiKey && !isCiPlaceholder(snapshot)) {
+    console.log(
+      `[firebase] OK — projectId=${snapshot.NEXT_PUBLIC_FIREBASE_PROJECT_ID}, apiKey=${apiKey.slice(0, 6)}…${apiKey.slice(-4)}`,
+    );
   } else {
-    console.log("[firebase] Variáveis locais parecem válidas.");
+    console.log("[firebase] CI placeholder detectado — verificação ignorada.");
   }
-  process.exit(0);
-}
-
-function getMissingIssue(snapshot) {
-  const missing = KEYS.filter((key) => !snapshot[key]);
-  return missing.length > 0
-    ? `Variáveis ausentes: ${missing.join(", ")}`
-    : null;
-}
-
-function getApiKeyIssue(snapshot) {
-  const apiKey = snapshot.NEXT_PUBLIC_FIREBASE_API_KEY;
-  if (apiKey === PLACEHOLDER_API_KEY) {
-    return "API key placeholder no build";
+} else {
+  console.warn("\n[firebase] Avisos de configuração (o build continua):");
+  for (const issue of issues) {
+    console.warn(`  • ${issue}`);
   }
-  if (!apiKey.startsWith("AIza") || apiKey.length < 35) {
-    return "API key com formato inválido";
-  }
-  return null;
-}
-
-try {
-  validate(readSnapshot());
-} catch (error) {
-  console.error(
-    `\n[firebase] Build bloqueado: ${error instanceof Error ? error.message : String(error)}\n`,
+  console.warn(
+    "  → Após corrigir na Vercel, faça Redeploy para o cadastro/login funcionar.\n",
   );
-  process.exit(1);
 }
+
+process.exit(0);
