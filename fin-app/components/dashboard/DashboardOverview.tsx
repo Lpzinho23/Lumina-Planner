@@ -20,6 +20,7 @@ import { formatBRL } from "@/lib/format";
 import type { YearlyTrendRow } from "./EvolucaoFinanceira";
 import { createCustomTooltipContent } from "./CustomTooltip";
 import SummaryCards from "./SummaryCards";
+import { chartsGridSx } from "@/components/layout/shared";
 
 type Props = {
   yearlyTrendData: YearlyTrendRow[];
@@ -34,7 +35,7 @@ type Props = {
 
 function panelSx(colors: ThemeColors) {
   return {
-    p: 3,
+    p: { xs: 2, sm: 2.5, md: 3 },
     bgcolor: colors.paper,
     borderRadius: 3,
     border: `1px solid ${colors.border}`,
@@ -70,7 +71,13 @@ export default function DashboardOverview({
   return (
     <Box>
       <Box mb={3}>
-        <Typography variant="h4" component="h1" fontWeight={700} color={colors.text}>
+        <Typography
+          variant="h4"
+          component="h1"
+          fontWeight={700}
+          color={colors.text}
+          sx={{ fontSize: { xs: "1.35rem", sm: "1.6rem", md: "2rem" } }}
+        >
           Visão Geral
         </Typography>
         <Typography variant="body1" color={colors.textSecondary} mt={0.5}>
@@ -85,14 +92,7 @@ export default function DashboardOverview({
         colors={colors}
       />
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "1.2fr 0.8fr" },
-          gap: 2,
-          mb: 2,
-        }}
-      >
+      <Box sx={{ ...chartsGridSx, gridTemplateColumns: { xs: "1fr", lg: "1.2fr 0.8fr" }, mb: 2 }}>
         <Paper elevation={0} sx={panelSx(colors)}>
           <Typography variant="h6" component="h2" fontWeight={700} mb={2}>
             Receita nos últimos meses
@@ -155,7 +155,14 @@ export default function DashboardOverview({
               </Stack>
             )}
           </Box>
-          <Stack direction="row" spacing={3} justifyContent="center" mt={1}>
+          <Stack
+            direction="row"
+            spacing={3}
+            justifyContent="center"
+            flexWrap="wrap"
+            mt={1}
+            useFlexGap
+          >
             {monthBreakdown.map((item) => (
               <Stack key={item.name} direction="row" spacing={1} alignItems="center">
                 <Box
@@ -175,13 +182,7 @@ export default function DashboardOverview({
         </Paper>
       </Box>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
-          gap: 2,
-        }}
-      >
+      <Box sx={chartsGridSx}>
         <Paper elevation={0} sx={panelSx(colors)}>
           <Typography variant="h6" component="h2" fontWeight={700} mb={2}>
             Últimos lançamentos

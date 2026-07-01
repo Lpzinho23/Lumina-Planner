@@ -7,7 +7,7 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import type { GridLayoutProps, Layout, ResizeHandleAxis } from "react-grid-layout";
 
-const MOBILE_GRID_MAX_WIDTH = 700;
+const MOBILE_GRID_MAX_WIDTH = 900;
 const MOBILE_MARGIN = [0, 12] as const;
 const DEFAULT_RESIZE_HANDLES: readonly ResizeHandleAxis[] = ["se", "s", "e"];
 

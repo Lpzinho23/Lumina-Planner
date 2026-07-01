@@ -20,6 +20,7 @@ import { DeleteOutline, Edit, History } from "@mui/icons-material";
 import type { StandardBlockProps } from "@/types/finance";
 import { formatBRL, formatDateBR } from "@/lib/format";
 import { isExpenseType } from "@/lib/finance";
+import { blockHeaderSx, tableContainerSx } from "@/components/layout/shared";
 
 export default function StandardBlock({
   title,
@@ -47,14 +48,13 @@ export default function StandardBlock({
       }}
     >
       <Box
-        p={2}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        bgcolor={colors.background}
-        borderBottom={`1px solid ${colors.border}`}
+        sx={{
+          ...blockHeaderSx,
+          bgcolor: colors.background,
+          borderBottom: `1px solid ${colors.border}`,
+        }}
       >
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ minWidth: 0 }}>
           <Box
             sx={{
               p: 1,
@@ -69,7 +69,12 @@ export default function StandardBlock({
             {title}
           </Typography>
         </Stack>
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          alignItems={{ xs: "stretch", sm: "center" }}
+          spacing={2}
+          sx={{ width: { xs: "100%", sm: "auto" } }}
+        >
           <Typography variant="h6" fontWeight="bold" sx={{ color }}>
             {formatBRL(total)}
           </Typography>
@@ -78,14 +83,19 @@ export default function StandardBlock({
             size="small"
             aria-label={`Adicionar lançamento em ${title}`}
             onClick={() => handleOpen(type)}
-            sx={{ bgcolor: color, color: "#000", fontWeight: "bold" }}
+            sx={{
+              bgcolor: color,
+              color: "#000",
+              fontWeight: "bold",
+              width: { xs: "100%", sm: "auto" },
+            }}
           >
             + Adicionar
           </Button>
         </Stack>
       </Box>
-      <TableContainer>
-        <Table size="small">
+      <TableContainer sx={tableContainerSx}>
+        <Table size="small" sx={{ minWidth: 560 }}>
           <TableHead>
             <TableRow
               sx={{ bgcolor: isDarkMode ? "#1e2025" : "#f4f4f5" }}

@@ -23,6 +23,7 @@ import {
   MONTHS_LIST,
 } from "@/lib/constants";
 import { formatBRL, parseISODateUTC } from "@/lib/format";
+import { blockHeaderSx, tableContainerSx } from "@/components/layout/shared";
 
 export default function PiggyBlock({
   data,
@@ -49,14 +50,13 @@ export default function PiggyBlock({
       }}
     >
       <Box
-        p={2}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        bgcolor={colors.background}
-        borderBottom={`1px solid ${colors.border}`}
+        sx={{
+          ...blockHeaderSx,
+          bgcolor: colors.background,
+          borderBottom: `1px solid ${colors.border}`,
+        }}
       >
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack direction="row" alignItems="center" spacing={2} sx={{ minWidth: 0 }}>
           <Box
             sx={{
               p: 1,
@@ -86,8 +86,8 @@ export default function PiggyBlock({
           </Box>
         </Stack>
       </Box>
-      <TableContainer>
-        <Table size="small">
+      <TableContainer sx={tableContainerSx}>
+        <Table size="small" sx={{ minWidth: 520 }}>
           <TableHead>
             <TableRow
               sx={{ bgcolor: isDarkMode ? "#1e2025" : "#f4f4f5" }}

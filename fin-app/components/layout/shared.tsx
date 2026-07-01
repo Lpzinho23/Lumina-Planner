@@ -1,12 +1,15 @@
 import type { SxProps, Theme } from "@mui/material";
 import type { ThemeColors } from "@/context/ThemeContext";
 
+/** Sidebar fixa só a partir de `lg` (1200px); abaixo disso usa drawer mobile. */
+export const SIDEBAR_DESKTOP_BREAKPOINT = "lg" as const;
+
 export const contentGridSx: SxProps<Theme> = {
   display: "grid",
   gridTemplateColumns: {
     xs: "1fr",
-    sm: "repeat(2, 1fr)",
-    lg: "repeat(3, 1fr)",
+    md: "repeat(2, 1fr)",
+    xl: "repeat(3, 1fr)",
   },
   gap: { xs: 1.5, sm: 2 },
 };
@@ -17,11 +20,52 @@ export const chartsGridSx: SxProps<Theme> = {
   gap: { xs: 1.5, sm: 2 },
 };
 
-export const statCardsRowSx: SxProps<Theme> = {
+/** Grade de 4 indicadores (dashboard, relatórios). */
+export const summaryCardsGridSx: SxProps<Theme> = {
   display: "grid",
-  gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
+  gridTemplateColumns: {
+    xs: "1fr",
+    sm: "repeat(2, 1fr)",
+    xl: "repeat(4, 1fr)",
+  },
   gap: { xs: 1.5, sm: 2 },
   mb: 3,
+};
+
+export const statCardsRowSx: SxProps<Theme> = {
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "1fr",
+    sm: "repeat(2, 1fr)",
+    lg: "repeat(3, 1fr)",
+  },
+  gap: { xs: 1.5, sm: 2 },
+  mb: 3,
+};
+
+export const sectionHeaderSx: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: { xs: "column", sm: "row" },
+  flexWrap: "wrap",
+  alignItems: { xs: "stretch", sm: "center" },
+  justifyContent: "space-between",
+  gap: { xs: 1.5, sm: 2 },
+  mb: 2,
+};
+
+export const blockHeaderSx: SxProps<Theme> = {
+  p: { xs: 1.5, sm: 2 },
+  display: "flex",
+  flexDirection: { xs: "column", sm: "row" },
+  flexWrap: "wrap",
+  alignItems: { xs: "stretch", sm: "center" },
+  justifyContent: "space-between",
+  gap: { xs: 1.5, sm: 2 },
+};
+
+export const tableContainerSx: SxProps<Theme> = {
+  overflowX: "auto",
+  WebkitOverflowScrolling: "touch",
 };
 
 export const statValueSx: SxProps<Theme> = {

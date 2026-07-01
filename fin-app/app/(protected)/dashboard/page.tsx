@@ -323,7 +323,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <Box maxWidth="xl" sx={{ mx: "auto", p: { xs: 0, sm: 1 } }}>
+    <Box maxWidth="xl" sx={{ mx: "auto", minWidth: 0, p: { xs: 0, sm: 1 } }}>
       <Paper
         sx={{
           p: 1.5,

@@ -24,6 +24,7 @@ import {
   Menu,
 } from "@mui/icons-material";
 import SidebarNavigation from "@/components/SidebarNavigation";
+import { SIDEBAR_DESKTOP_BREAKPOINT } from "@/components/layout/shared";
 
 const SIDEBAR_WIDTH = 300;
 
@@ -174,7 +175,7 @@ export default function Sidebar() {
         aria-label="Navegação principal"
         sx={{
           width: SIDEBAR_WIDTH,
-          display: { xs: "none", md: "block" },
+          display: { xs: "none", [SIDEBAR_DESKTOP_BREAKPOINT]: "block" },
           flexShrink: 0,
         }}
       >
@@ -196,7 +197,7 @@ export default function Sidebar() {
       <Box
         component="header"
         sx={{
-          display: { xs: "flex", md: "none" },
+          display: { xs: "flex", [SIDEBAR_DESKTOP_BREAKPOINT]: "none" },
           alignItems: "center",
           justifyContent: "space-between",
           position: "fixed",

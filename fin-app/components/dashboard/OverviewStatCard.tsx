@@ -55,7 +55,16 @@ export default function OverviewStatCard({
         >
           {label}
         </Typography>
-        <Typography variant="h5" fontWeight={700} color={colors.text} noWrap>
+        <Typography
+          variant="h5"
+          fontWeight={700}
+          color={colors.text}
+          sx={{
+            fontSize: { xs: "1.1rem", sm: "1.25rem", md: "1.5rem" },
+            wordBreak: "break-word",
+            lineHeight: 1.2,
+          }}
+        >
           {formatBRL(value)}
         </Typography>
       </Box>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Stack } from "@mui/material";
+import { Box } from "@mui/material";
 import {
   TrendingUp,
   TrendingDown,
@@ -9,6 +9,7 @@ import {
 } from "@mui/icons-material";
 import type { ThemeColors } from "@/context/ThemeContext";
 import { SEMANTIC_COLORS } from "@/lib/constants";
+import { summaryCardsGridSx } from "@/components/layout/shared";
 import OverviewStatCard from "./OverviewStatCard";
 
 type Props = {
@@ -65,16 +66,14 @@ export default function SummaryCards({
   ];
 
   return (
-    <Stack
-      direction={{ xs: "column", md: "row" }}
-      spacing={2}
-      mb={3}
+    <Box
+      sx={summaryCardsGridSx}
       role="region"
       aria-label="Indicadores financeiros do período"
     >
       {cards.map((card) => (
         <OverviewStatCard key={card.label} {...card} colors={colors} />
       ))}
-    </Stack>
+    </Box>
   );
 }

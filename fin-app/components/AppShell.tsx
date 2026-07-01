@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import Sidebar, { SIDEBAR_WIDTH } from "@/components/Sidebar";
 import FinanceFab from "@/components/FinanceFab";
+import { SIDEBAR_DESKTOP_BREAKPOINT } from "@/components/layout/shared";
 import { useAppTheme } from "@/context/ThemeContext";
 
 type AppShellProps = {
@@ -40,17 +41,18 @@ export default function AppShell({ children }: AppShellProps) {
             ? 0
             : {
                 xs: "calc(56px + env(safe-area-inset-top) + 12px)",
-                md: 3,
-                lg: 4,
+                [SIDEBAR_DESKTOP_BREAKPOINT]: 3,
+                xl: 4,
               },
           pb: isAuthPage
             ? 0
             : {
                 xs: "calc(72px + env(safe-area-inset-bottom))",
-                md: 3,
-                lg: 4,
+                [SIDEBAR_DESKTOP_BREAKPOINT]: 3,
+                xl: 4,
               },
-          ml: isAuthPage ? 0 : { md: `${SIDEBAR_WIDTH}px` },
+          ml: isAuthPage ? 0 : { [SIDEBAR_DESKTOP_BREAKPOINT]: `${SIDEBAR_WIDTH}px` },
+          overflowX: "hidden",
           transition: "margin 0.2s ease",
         }}
       >

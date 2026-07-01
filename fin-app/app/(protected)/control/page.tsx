@@ -51,6 +51,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/GridLegacy";
+import { sectionHeaderSx } from "@/components/layout/shared";
 import {
   TrendingUp,
   TrendingDown,
@@ -681,8 +682,14 @@ export default function ControlPage() {
   };
 
   return (
-    <Box maxWidth="xl" sx={{ mx: "auto" }}>
-      <Typography variant="h4" component="h1" fontWeight="bold" color={colors.text} sx={{ mb: 2 }}>
+    <Box maxWidth="xl" sx={{ mx: "auto", minWidth: 0 }}>
+      <Typography
+        variant="h4"
+        component="h1"
+        fontWeight="bold"
+        color={colors.text}
+        sx={{ mb: 2, fontSize: { xs: "1.35rem", sm: "1.6rem", md: "2rem" } }}
+      >
         Controle financeiro
       </Typography>
       <Paper
@@ -704,7 +711,7 @@ export default function ControlPage() {
         >
           FILTRAR PERÍODO:
         </Typography>
-        <FormControl size="small" sx={{ minWidth: 120 }}>
+        <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 120 } }}>
           <Select
             value={currentMonth}
             onChange={(e) => setCurrentMonth(Number(e.target.value))}
@@ -721,7 +728,7 @@ export default function ControlPage() {
             ))}
           </Select>
         </FormControl>
-        <FormControl size="small" sx={{ minWidth: 100 }}>
+        <FormControl size="small" sx={{ minWidth: { xs: "100%", sm: 100 } }}>
           <Select
             value={currentYear}
             onChange={(e) => setCurrentYear(Number(e.target.value))}
@@ -738,7 +745,7 @@ export default function ControlPage() {
       </Paper>
 
       <Grid container spacing={3} mb={4}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <TopSummaryCard
             title="Saldo em Conta"
             value={totalAccountsBalance}
@@ -748,7 +755,7 @@ export default function ControlPage() {
             colors={colors}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <TopSummaryCard
             title="Total Recebido"
             value={sumIncomes}
@@ -758,7 +765,7 @@ export default function ControlPage() {
             colors={colors}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <TopSummaryCard
             title="Total Gasto"
             value={sumExpenses}
@@ -768,7 +775,7 @@ export default function ControlPage() {
             colors={colors}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={3}>
           <TopSummaryCard
             title="Guardado (Mês)"
             value={sumSavedMonth}
@@ -781,12 +788,7 @@ export default function ControlPage() {
       </Grid>
 
       <Box mb={4}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
+        <Box sx={sectionHeaderSx}>
           <Typography variant="h6" component="h2" fontWeight="bold" color={colors.text}>
             Minhas Contas Bancárias
           </Typography>
@@ -795,14 +797,18 @@ export default function ControlPage() {
             variant="outlined"
             aria-label="Cadastrar nova conta bancária"
             onClick={() => handleOpenAccountModal()}
-            sx={{ color: colors.text, borderColor: colors.border }}
+            sx={{
+              color: colors.text,
+              borderColor: colors.border,
+              width: { xs: "100%", sm: "auto" },
+            }}
           >
             Nova Conta
           </Button>
-        </Stack>
+        </Box>
         <Grid container spacing={3}>
           {accounts.map((acc) => (
-            <Grid item xs={12} md={4} key={acc.id}>
+            <Grid item xs={12} sm={6} lg={4} key={acc.id}>
               <AccountBlock
                 account={acc}
                 transactions={transactions}
@@ -822,12 +828,7 @@ export default function ControlPage() {
       </Box>
 
       <Box mb={4}>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
+        <Box sx={sectionHeaderSx}>
           <Typography variant="h6" component="h2" fontWeight="bold" color={colors.text}>
             Meus Cartões de Crédito
           </Typography>
@@ -836,14 +837,18 @@ export default function ControlPage() {
             variant="outlined"
             aria-label="Cadastrar novo cartão de crédito"
             onClick={() => handleOpenCardModal()}
-            sx={{ color: colors.text, borderColor: colors.border }}
+            sx={{
+              color: colors.text,
+              borderColor: colors.border,
+              width: { xs: "100%", sm: "auto" },
+            }}
           >
             Novo Cartão
           </Button>
-        </Stack>
+        </Box>
         <Grid container spacing={3}>
           {cards.map((card) => (
-            <Grid item xs={12} md={6} key={card.id}>
+            <Grid item xs={12} sm={6} lg={6} key={card.id}>
               <CreditCardBlock
                 card={card}
                 transactions={transactions}
