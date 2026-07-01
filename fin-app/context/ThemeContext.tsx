@@ -72,6 +72,11 @@ export const ThemeContextProvider = ({ children }: { children: React.ReactNode }
     [isDarkMode]
   );
 
+  useEffect(() => {
+    document.documentElement.style.setProperty("--app-background", colors.background);
+    document.documentElement.style.colorScheme = isDarkMode ? "dark" : "light";
+  }, [colors.background, isDarkMode]);
+
   const muiTheme = useMemo(
     () =>
       createTheme({

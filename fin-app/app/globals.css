@@ -8,7 +8,7 @@
 html {
   min-height: 100%;
   -webkit-text-size-adjust: 100%;
-  background: #111115;
+  background: var(--app-background, #eef0f4);
 }
 
 body {

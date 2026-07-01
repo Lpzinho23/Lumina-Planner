@@ -25,24 +25,14 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { extractAuthErrorCode, getAuthFriendlyMessage } from "@/lib/authErrors";
 import FirebaseConfigAlert from "@/components/FirebaseConfigAlert";
-
-// Mesma paleta do Login
-const colors = {
-  accentPurple: "#7c3aed",
-  pageBackground: "#202024",
-  cardBackground: "#27272a",
-  inputBackground: "#18191d",
-  buttonGrey: "#e4e4e7",
-  buttonGreyHover: "#d4d4d8",
-  textMain: "#ffffff",
-  textDark: "#18191d",
-  textGray: "#a1a1aa",
-  border: "#333333",
-};
+import { useAppTheme } from "@/context/ThemeContext";
+import { getAuthPageColors } from "@/lib/authPageColors";
 
 export default function CadastroPage() {
   const { signup } = useAuth();
   const router = useRouter();
+  const { colors: themeColors, isDarkMode } = useAppTheme();
+  const colors = getAuthPageColors(themeColors, isDarkMode);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -110,7 +100,7 @@ export default function CadastroPage() {
           borderRadius: 4,
           bgcolor: colors.cardBackground,
           border: `1px solid ${colors.border}`,
-          boxShadow: "0 10px 30px -12px rgba(0, 0, 0, 0.5)",
+          boxShadow: colors.cardShadow,
         }}
       >
         <Box component="form" onSubmit={handleRegister}>
@@ -239,16 +229,18 @@ export default function CadastroPage() {
               sx={{
                 mt: 1,
                 py: 1.5,
-                bgcolor: colors.buttonGrey,
-                color: colors.textDark,
+                bgcolor: colors.buttonBg,
+                color: colors.buttonText,
                 fontWeight: "bold",
                 fontSize: "1rem",
                 borderRadius: 2,
                 boxShadow: "none",
                 transition: "all 0.2s",
                 "&:hover": {
-                  bgcolor: colors.buttonGreyHover,
-                  boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                  bgcolor: colors.buttonBgHover,
+                  boxShadow: isDarkMode
+                    ? "0 2px 10px rgba(0,0,0,0.1)"
+                    : "0 4px 14px rgba(124,58,237,0.35)",
                 },
               }}
             >
