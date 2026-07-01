@@ -429,21 +429,25 @@ export default function ControlPage() {
     if (!openParam || openHandledRef.current) return;
     openHandledRef.current = true;
 
-    if (openParam === "income") {
-      handleOpen("income");
-    } else if (openParam === "expense") {
-      handleOpen("expense_variable");
-    } else if (openParam === "credit") {
-      handleOpen("expense_variable", undefined, {
-        paymentMethod: "Crédito",
-        status: "Pago",
-      });
-    } else if (openParam === "transfer") {
-      toast("Use duas movimentações para registrar uma transferência entre contas.", {
-        icon: "↔️",
-      });
-      handleOpen("savings");
-    }
+    const timer = window.setTimeout(() => {
+      if (openParam === "income") {
+        handleOpen("income");
+      } else if (openParam === "expense") {
+        handleOpen("expense_variable");
+      } else if (openParam === "credit") {
+        handleOpen("expense_variable", undefined, {
+          paymentMethod: "Crédito",
+          status: "Pago",
+        });
+      } else if (openParam === "transfer") {
+        toast("Use duas movimentações para registrar uma transferência entre contas.", {
+          icon: "↔️",
+        });
+        handleOpen("savings");
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, [searchParams]);
 
   const handleCardSelection = (id: string) => {
